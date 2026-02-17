@@ -142,13 +142,6 @@ CMS_TEMPLATES = [
     ("impressum.html", "Impressum"),
 ]
 
-CMS_PLACEHOLDER_CONF = {
-    "content": {
-        "name": "Inhalt",
-        "plugins": ["TextPlugin", "CookieConsentPlugin"],
-    },
-}
-
 # ---------------------------------------------------------------------------
 # Cookie Love
 # ---------------------------------------------------------------------------
