@@ -1,0 +1,388 @@
+# djangocms-cookie-love – German translations
+# Copyright (C) 2026 Noelp Max
+# This file is distributed under the same license as the djangocms-cookie-love package.
+# Noelp Max <noelpmax@gmail.com>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: djangocms-cookie-love 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-15 11:27-0600\n"
+"PO-Revision-Date: 2026-02-15 12:00-0600\n"
+"Last-Translator: Noelp Max <noelpmax@gmail.com>\n"
+"Language-Team: German\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: admin.py:54
+msgid "Links"
+msgstr "Links"
+
+#: admin.py:60
+msgid "Design"
+msgstr "Design"
+
+#: admin.py:66
+msgid "Button Labels"
+msgstr "Button-Beschriftungen"
+
+#: admin.py:152
+msgid "Export selected consent records as CSV"
+msgstr "Ausgewählte Einwilligungen als CSV exportieren"
+
+#: apps.py:8
+msgid "Cookie Love – Cookie Consent"
+msgstr "Cookie Love – Cookie-Einwilligung"
+
+#: cms_plugins.py:14
+msgid "Cookie Consent Banner"
+msgstr "Cookie-Einwilligungs-Banner"
+
+#: cms_plugins.py:15
+msgid "Cookie Love"
+msgstr "Cookie Love"
+
+#: models.py:18 templates/djangocms_cookie_love/settings_modal.html:5
+msgid "Cookie Settings"
+msgstr "Cookie-Einstellungen"
+
+#: models.py:19
+msgid "Title"
+msgstr "Titel"
+
+#: models.py:22 models.py:158
+msgid "Description"
+msgstr "Beschreibung"
+
+#: models.py:23
+msgid "Main text displayed in the cookie banner"
+msgstr "Haupttext, der im Cookie-Banner angezeigt wird"
+
+#: models.py:25
+msgid ""
+"We use cookies to improve your experience on our website. Some cookies are "
+"essential for the website to function, while others help us understand how "
+"you use our site."
+msgstr ""
+"Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern. "
+"Einige Cookies sind für die Funktion der Website unerlässlich, während "
+"andere uns helfen zu verstehen, wie Sie unsere Website nutzen."
+
+#: models.py:32
+msgid "Privacy Policy URL"
+msgstr "Datenschutzerklärung-URL"
+
+#: models.py:33
+msgid "Link to privacy policy page"
+msgstr "Link zur Datenschutzerklärung"
+
+#: models.py:37
+msgid "Imprint URL"
+msgstr "Impressum-URL"
+
+#: models.py:38
+msgid "Link to imprint/legal notice page"
+msgstr "Link zum Impressum"
+
+#: models.py:43
+msgid "Bottom Bar"
+msgstr "Leiste unten"
+
+#: models.py:44
+msgid "Top Bar"
+msgstr "Leiste oben"
+
+#: models.py:45
+msgid "Center Modal"
+msgstr "Zentriertes Modal"
+
+#: models.py:51
+msgid "Position"
+msgstr "Position"
+
+#: models.py:57
+msgid "Accept All"
+msgstr "Alle akzeptieren"
+
+#: models.py:58
+msgid "Accept All Button Label"
+msgstr "Alle-akzeptieren-Button"
+
+#: models.py:62
+msgid "Only Essential"
+msgstr "Nur Notwendige"
+
+#: models.py:63
+msgid "Reject Button Label"
+msgstr "Ablehnen-Button"
+
+#: models.py:67
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: models.py:68
+msgid "Settings Button Label"
+msgstr "Einstellungen-Button"
+
+#: models.py:72
+msgid "Save Preferences"
+msgstr "Einstellungen speichern"
+
+#: models.py:73
+msgid "Save Button Label"
+msgstr "Speichern-Button"
+
+#: models.py:78
+msgid "Active"
+msgstr "Aktiv"
+
+#: models.py:82
+msgid "Created At"
+msgstr "Erstellt am"
+
+#: models.py:86
+msgid "Updated At"
+msgstr "Aktualisiert am"
+
+#: models.py:90
+msgid "Cookie Consent Configuration"
+msgstr "Cookie-Einwilligungs-Konfiguration"
+
+#: models.py:91
+msgid "Cookie Consent Configurations"
+msgstr "Cookie-Einwilligungs-Konfigurationen"
+
+#: models.py:146 models.py:211
+msgid "Configuration"
+msgstr "Konfiguration"
+
+#: models.py:150 templates/djangocms_cookie_love/includes/cookie_group.html:20
+msgid "Name"
+msgstr "Name"
+
+#: models.py:155
+msgid "Slug"
+msgstr "Slug"
+
+#: models.py:159
+msgid "Explains to the user what this cookie group does"
+msgstr "Erklärt dem Nutzer, wozu diese Cookie-Gruppe dient"
+
+#: models.py:163
+msgid "Required"
+msgstr "Erforderlich"
+
+#: models.py:164
+msgid "Required groups cannot be deactivated (e.g. Essential)"
+msgstr "Erforderliche Gruppen können nicht deaktiviert werden (z. B. Notwendige)"
+
+#: models.py:168
+msgid "Enabled by Default"
+msgstr "Standardmäßig aktiviert"
+
+#: models.py:169
+msgid "Pre-selected state (only allowed for required groups per GDPR)"
+msgstr "Vorausgewählter Status (nur für erforderliche Gruppen gemäß DSGVO erlaubt)"
+
+#: models.py:173
+msgid "Order"
+msgstr "Reihenfolge"
+
+#: models.py:178
+msgid "Cookies"
+msgstr "Cookies"
+
+#: models.py:180
+msgid ""
+"List of cookies: [{\"name\": \"...\", \"provider\": \"...\", \"duration\": "
+"\"...\", \"purpose\": \"...\"}]"
+msgstr ""
+"Liste der Cookies: [{\"name\": \"...\", \"provider\": \"...\", \"duration\":"
+" \"...\", \"purpose\": \"...\"}]"
+
+#: models.py:186
+msgid "Cookie Group"
+msgstr "Cookie-Gruppe"
+
+#: models.py:187
+msgid "Cookie Groups"
+msgstr "Cookie-Gruppen"
+
+#: models.py:197
+msgid ""
+"Only required cookie groups may be enabled by default (GDPR compliance)."
+msgstr ""
+"Nur erforderliche Cookie-Gruppen dürfen standardmäßig aktiviert sein "
+"(DSGVO-Konformität)."
+
+#: models.py:215
+msgid "Version"
+msgstr "Version"
+
+#: models.py:218
+msgid "Change Description"
+msgstr "Änderungsbeschreibung"
+
+#: models.py:219
+msgid "What changed in this version"
+msgstr "Was hat sich in dieser Version geändert"
+
+#: models.py:223
+msgid "Requires Re-consent"
+msgstr "Erneute Einwilligung erforderlich"
+
+#: models.py:224
+msgid "If checked, all users must re-consent"
+msgstr "Wenn aktiviert, müssen alle Nutzer erneut einwilligen"
+
+#: models.py:228
+msgid "Published At"
+msgstr "Veröffentlicht am"
+
+#: models.py:231
+msgid "Snapshot"
+msgstr "Momentaufnahme"
+
+#: models.py:232
+msgid "Complete snapshot of config and cookie groups at time of publishing"
+msgstr "Vollständige Momentaufnahme der Konfiguration und Cookie-Gruppen zum Zeitpunkt der Veröffentlichung"
+
+#: models.py:236 models.py:275
+msgid "Consent Version"
+msgstr "Einwilligungs-Version"
+
+#: models.py:237
+msgid "Consent Versions"
+msgstr "Einwilligungs-Versionen"
+
+#: models.py:269
+msgid "Consent ID"
+msgstr "Einwilligungs-ID"
+
+#: models.py:279
+msgid "IP Hash"
+msgstr "IP-Hash"
+
+#: models.py:280
+msgid "SHA-256 hash of the user's IP address"
+msgstr "SHA-256-Hash der IP-Adresse des Nutzers"
+
+#: models.py:284
+msgid "User Agent"
+msgstr "User Agent"
+
+#: models.py:290
+msgid "Accepted Groups"
+msgstr "Akzeptierte Gruppen"
+
+#: models.py:294
+msgid "Banner – Accept All"
+msgstr "Banner – Alle akzeptieren"
+
+#: models.py:295
+msgid "Banner – Reject Optional"
+msgstr "Banner – Optionale ablehnen"
+
+#: models.py:296
+msgid "Settings Modal"
+msgstr "Einstellungs-Dialog"
+
+#: models.py:297
+msgid "Revoke"
+msgstr "Widerrufen"
+
+#: models.py:298
+msgid "API"
+msgstr "API"
+
+#: models.py:303
+msgid "Consent Method"
+msgstr "Einwilligungsmethode"
+
+#: models.py:308
+msgid "Consent Given At"
+msgstr "Einwilligung erteilt am"
+
+#: models.py:312
+msgid "User Consent"
+msgstr "Nutzer-Einwilligung"
+
+#: models.py:313
+msgid "User Consents"
+msgstr "Nutzer-Einwilligungen"
+
+#: templates/djangocms_cookie_love/banner.html:6
+msgid "Cookie Consent"
+msgstr "Cookie-Einwilligung"
+
+#: templates/djangocms_cookie_love/banner.html:23
+msgid "Privacy Policy"
+msgstr "Datenschutzerklärung"
+
+#: templates/djangocms_cookie_love/banner.html:28
+msgid "Imprint"
+msgstr "Impressum"
+
+#: templates/djangocms_cookie_love/includes/cookie_group.html:7
+msgid "Always Active"
+msgstr "Immer aktiv"
+
+#: templates/djangocms_cookie_love/includes/cookie_group.html:16
+msgid "Show cookies"
+msgstr "Cookies anzeigen"
+
+#: templates/djangocms_cookie_love/includes/cookie_group.html:21
+msgid "Provider"
+msgstr "Anbieter"
+
+#: templates/djangocms_cookie_love/includes/cookie_group.html:22
+msgid "Duration"
+msgstr "Dauer"
+
+#: templates/djangocms_cookie_love/includes/cookie_group.html:23
+msgid "Purpose"
+msgstr "Zweck"
+
+#: templates/djangocms_cookie_love/settings_modal.html:17
+msgid "Close"
+msgstr "Schließen"
+
+#: models.py Cookie model
+msgid "Cookie Name"
+msgstr "Cookie-Name"
+
+msgid "Service that sets this cookie, e.g. Google Analytics"
+msgstr "Dienst, der dieses Cookie setzt, z.B. Google Analytics"
+
+msgid "How long the cookie persists, e.g. 2 years, Session"
+msgstr "Wie lange das Cookie gespeichert wird, z.B. 2 Jahre, Sitzung"
+
+msgid "Description of what this cookie is used for"
+msgstr "Beschreibung, wofür dieses Cookie verwendet wird"
+
+msgid "Required cookies cannot be deselected by the user"
+msgstr "Erforderliche Cookies können vom Nutzer nicht abgewählt werden"
+
+msgid "Cookie"
+msgstr "Cookie"
+
+msgid "Cookies"
+msgstr "Cookies"
+
+msgid "Cookie Group"
+msgstr "Cookie-Gruppe"
+
+msgid "Technical cookie name, e.g. _ga, _fbp"
+msgstr "Technischer Cookie-Name, z.B. _ga, _fbp"
+
+msgid "Unique identifier within the group, used for API identification"
+msgstr "Eindeutiger Bezeichner innerhalb der Gruppe, für API-Identifikation"
+
+msgid "Cookies in a required group must also be marked as required."
+msgstr "Cookies in einer erforderlichen Gruppe müssen ebenfalls als erforderlich markiert sein."
+
+msgid "Accepted Cookies"
+msgstr "Akzeptierte Cookies"

@@ -1,0 +1,438 @@
+{% extends "base.html" %}
+{% load cms_tags static i18n %}
+
+{% block content %}
+<div class="cl-docs">
+
+  <!-- Hero -->
+  <div class="cl-docs__hero text-center mb-5">
+    <h1 class="cl-docs__logo">🍪 Cookie Love</h1>
+    <p class="cl-docs__tagline">DSGVO-konformes Cookie Consent Management für Django CMS</p>
+    <div class="d-flex gap-2 justify-content-center mt-3">
+      <code class="cl-docs__badge">v0.1.0</code>
+      <code class="cl-docs__badge cl-docs__badge--green">Python 3.10+</code>
+      <code class="cl-docs__badge cl-docs__badge--blue">Django 4.2+</code>
+      <code class="cl-docs__badge">Django CMS 4/5</code>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section class="mb-5">
+    <h2 class="cl-docs__heading">Was ist Cookie Love?</h2>
+    <p>
+      <strong>djangocms-cookie-love</strong> ist ein Django CMS Paket für ein vollständig DSGVO-konformes
+      Cookie-Consent-Management. Es bietet einen modernen, anpassbaren Cookie-Banner mit granularer
+      Kontrolle über Cookie-Gruppen, Versionierung und einer vollständigen Audit-Trail-Dokumentation.
+    </p>
+  </section>
+
+  <section class="mb-5">
+    <h2 class="cl-docs__heading">Features</h2>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="cl-docs__card">
+          <h3>🛡️ DSGVO-Konformität</h3>
+          <ul>
+            <li>Opt-in by Default – keine vorausgewählten optionalen Cookies</li>
+            <li>Granulare Kontrolle pro Cookie-Gruppe</li>
+            <li>Informierte Einwilligung mit Cookie-Details</li>
+            <li>Jederzeit widerrufbar</li>
+            <li>Vollständiger Audit-Trail</li>
+            <li>IP-Adressen werden nur als SHA-256-Hash gespeichert</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="cl-docs__card">
+          <h3>🎨 Modernes Design</h3>
+          <ul>
+            <li>Bootstrap 5 kompatibel</li>
+            <li>Responsive & Mobile-First</li>
+            <li>Barrierefreiheit (ARIA, Keyboard, Focus Trap)</li>
+            <li>CSS Custom Properties für einfaches Theming</li>
+            <li>3 Banner-Positionen: Unten, Oben, Zentriert</li>
+            <li>Smooth Animations & Dark Mode Support</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="cl-docs__card">
+          <h3>🔄 Versionierung</h3>
+          <ul>
+            <li>Consent-Versionen mit Snapshot der Konfiguration</li>
+            <li>Automatische Re-Consent-Aufforderung bei Änderungen</li>
+            <li>Vollständige Historie aller Einwilligungen</li>
+            <li>CSV-Export der Consent-Records</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="cl-docs__card">
+          <h3>⚡ Entwicklerfreundlich</h3>
+          <ul>
+            <li>Vanilla JavaScript – kein jQuery nötig</li>
+            <li>Öffentliche JS API: <code>CookieLove.openSettings()</code></li>
+            <li>REST API für Consent-Verwaltung</li>
+            <li>Django Middleware & Context Processor</li>
+            <li>Template Tags für einfache Integration</li>
+            <li>i18n-ready (Deutsch & Englisch)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Installation -->
+  <section class="mb-5">
+    <h2 class="cl-docs__heading">Installation</h2>
+
+    <h3>1. Paket installieren</h3>
+    <pre class="cl-docs__code"><code>pip install djangocms-cookie-love</code></pre>
+
+    <h3>2. INSTALLED_APPS</h3>
+    <pre class="cl-docs__code"><code>INSTALLED_APPS = [
+    ...
+    "djangocms_cookie_love",
+]</code></pre>
+
+    <h3>3. Middleware hinzufügen</h3>
+    <pre class="cl-docs__code"><code>MIDDLEWARE = [
+    ...
+    "djangocms_cookie_love.middleware.CookieConsentMiddleware",
+]</code></pre>
+
+    <h3>4. Context Processor (optional)</h3>
+    <pre class="cl-docs__code"><code>TEMPLATES = [{
+    "OPTIONS": {
+        "context_processors": [
+            ...
+            "djangocms_cookie_love.context_processors.cookie_consent",
+        ],
+    },
+}]</code></pre>
+
+    <h3>5. URLs einbinden</h3>
+    <pre class="cl-docs__code"><code># urls.py
+from django.urls import include, path
+
+urlpatterns = [
+    ...
+    path("cookie-love/", include("djangocms_cookie_love.urls")),
+]</code></pre>
+
+    <h3>6. Migrationen ausführen</h3>
+    <pre class="cl-docs__code"><code>python manage.py migrate</code></pre>
+  </section>
+
+  <!-- Einrichtung -->
+  <section class="mb-5">
+    <h2 class="cl-docs__heading">Einrichtung</h2>
+
+    <h3>Admin-Konfiguration</h3>
+    <p>Nach der Installation können Sie im Django Admin unter <strong>Cookie Love → Cookie Consent Configurations</strong> die Konfiguration anlegen:</p>
+    <ol>
+      <li>Titel und Beschreibungstext für den Banner</li>
+      <li>Links zu Datenschutzerklärung und Impressum</li>
+      <li>Banner-Position wählen (Unten / Oben / Zentriert)</li>
+      <li>Button-Beschriftungen anpassen</li>
+      <li>Cookie-Gruppen anlegen (Notwendige, Analyse, Marketing, etc.)</li>
+    </ol>
+
+    <h3>Cookie-Gruppen</h3>
+    <p>Jede Cookie-Gruppe enthält:</p>
+    <ul>
+      <li><strong>Name & Slug</strong> – Anzeigename und technischer Bezeichner</li>
+      <li><strong>Beschreibung</strong> – Erklärt dem Nutzer wofür die Cookies verwendet werden</li>
+      <li><strong>Erforderlich</strong> – Pflicht-Cookies können nicht deaktiviert werden</li>
+      <li><strong>Cookies</strong> – Liste der einzelnen Cookies mit Name, Anbieter, Dauer und Zweck</li>
+    </ul>
+  </section>
+
+  <!-- Integration -->
+  <section class="mb-5">
+    <h2 class="cl-docs__heading">Integration</h2>
+
+    <h3>Option A: Template Tag (empfohlen)</h3>
+    <pre class="cl-docs__code"><code>{% templatetag openblock %} load cookie_love_tags {% templatetag closeblock %}
+
+{% templatetag openblock %} cookie_love_banner {% templatetag closeblock %}</code></pre>
+    <p>Fügt Banner, Settings-Modal, CSS und JavaScript automatisch ein.</p>
+
+    <h3>Option B: CMS Plugin</h3>
+    <p>
+      Fügen Sie das <strong>Cookie Consent Banner</strong> Plugin per Drag & Drop
+      in einen CMS-Placeholder ein.
+    </p>
+
+    <h3>Option C: Einzelne Tags</h3>
+    <pre class="cl-docs__code"><code>{% templatetag openblock %} cookie_love_css {% templatetag closeblock %}  {# CSS im &lt;head&gt; #}
+{% templatetag openblock %} cookie_love_js {% templatetag closeblock %}   {# JS vor &lt;/body&gt; #}</code></pre>
+  </section>
+
+  <!-- JavaScript API -->
+  <section class="mb-5">
+    <h2 class="cl-docs__heading">JavaScript API</h2>
+    <p>Die öffentliche <code>CookieLove</code> API steht global zur Verfügung:</p>
+    <pre class="cl-docs__code"><code>// Cookie-Einstellungen öffnen
+CookieLove.openSettings();
+
+// Alle Cookies akzeptieren
+CookieLove.acceptAll();
+
+// Nur notwendige Cookies
+CookieLove.rejectAll();
+
+// Prüfen ob eine Gruppe akzeptiert wurde
+if (CookieLove.hasConsent("analytics")) {
+    // Analytics laden
+}
+
+// Auf Consent-Änderungen reagieren
+CookieLove.onConsent(function(groups) {
+    console.log("Akzeptierte Gruppen:", groups);
+});
+
+// Einwilligung widerrufen
+CookieLove.revokeConsent();</code></pre>
+
+    <h3>Script Blocking</h3>
+    <p>Skripte können automatisch erst nach Einwilligung geladen werden:</p>
+    <pre class="cl-docs__code"><code>&lt;script type="text/plain" data-cl-consent="analytics"
+        data-cl-src="https://www.googletagmanager.com/gtag/js"&gt;
+&lt;/script&gt;</code></pre>
+  </section>
+
+  <!-- REST API -->
+  <section class="mb-5">
+    <h2 class="cl-docs__heading">REST API</h2>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Methode</th>
+          <th>Endpoint</th>
+          <th>Beschreibung</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>GET</code></td>
+          <td><code>/cookie-love/api/config/</code></td>
+          <td>Banner-Konfiguration mit Cookie-Gruppen</td>
+        </tr>
+        <tr>
+          <td><code>GET</code></td>
+          <td><code>/cookie-love/api/consent/</code></td>
+          <td>Aktuellen Consent-Status abfragen</td>
+        </tr>
+        <tr>
+          <td><code>POST</code></td>
+          <td><code>/cookie-love/api/consent/</code></td>
+          <td>Consent speichern</td>
+        </tr>
+        <tr>
+          <td><code>POST</code></td>
+          <td><code>/cookie-love/api/consent/revoke/</code></td>
+          <td>Einwilligung widerrufen</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Settings -->
+  <section class="mb-5">
+    <h2 class="cl-docs__heading">Einstellungen</h2>
+    <p>Alle Einstellungen sind optional und werden in <code>settings.py</code> gesetzt:</p>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Setting</th>
+          <th>Default</th>
+          <th>Beschreibung</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>COOKIE_LOVE_COOKIE_NAME</code></td>
+          <td><code>"cookie_love_consent"</code></td>
+          <td>Name des Consent-Cookies</td>
+        </tr>
+        <tr>
+          <td><code>COOKIE_LOVE_COOKIE_DURATION</code></td>
+          <td><code>365</code></td>
+          <td>Gültigkeit in Tagen</td>
+        </tr>
+        <tr>
+          <td><code>COOKIE_LOVE_COOKIE_SECURE</code></td>
+          <td><code>True</code></td>
+          <td>Secure-Flag (HTTPS only)</td>
+        </tr>
+        <tr>
+          <td><code>COOKIE_LOVE_COOKIE_SAMESITE</code></td>
+          <td><code>"Lax"</code></td>
+          <td>SameSite-Attribut</td>
+        </tr>
+        <tr>
+          <td><code>COOKIE_LOVE_IP_SALT</code></td>
+          <td><code>"cookie-love"</code></td>
+          <td>Salt für IP-Hashing</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Theming -->
+  <section class="mb-5">
+    <h2 class="cl-docs__heading">Theming</h2>
+    <p>Das Design lässt sich über CSS Custom Properties anpassen:</p>
+    <pre class="cl-docs__code"><code>:root {
+    --cl-primary: #6b21a8;        /* Hauptfarbe */
+    --cl-primary-hover: #581c87;  /* Hover-Farbe */
+    --cl-primary-light: #f3e8ff;  /* Heller Hintergrund */
+    --cl-bg: #ffffff;             /* Banner-Hintergrund */
+    --cl-text: #1e1b2e;           /* Textfarbe */
+    --cl-text-muted: #6b7280;     /* Sekundäre Textfarbe */
+    --cl-border: #e5e7eb;         /* Rahmenfarbe */
+    --cl-border-radius: 1rem;     /* Eckenradius */
+    --cl-max-width: 720px;        /* Maximale Breite */
+}</code></pre>
+  </section>
+
+  <!-- Middleware -->
+  <section class="mb-5">
+    <h2 class="cl-docs__heading">Middleware & Context Processor</h2>
+    <p>Die Middleware setzt auf jedem Request folgende Attribute:</p>
+    <pre class="cl-docs__code"><code># In Views oder Templates verfügbar:
+request.cookie_consent          # UserConsent-Objekt oder None
+request.cookie_consent_required # True wenn Banner angezeigt werden soll
+request.cookie_consent_groups   # Liste akzeptierter Gruppen-Slugs
+
+# Im Template via Context Processor:
+{% templatetag openblock %} if cookie_consent_required {% templatetag closeblock %}
+    {# Banner anzeigen #}
+{% templatetag openblock %} endif {% templatetag closeblock %}
+
+{% templatetag openblock %} if "analytics" in cookie_consent_groups {% templatetag closeblock %}
+    {# Analytics-Code laden #}
+{% templatetag openblock %} endif {% templatetag closeblock %}</code></pre>
+  </section>
+
+  <!-- Lizenz -->
+  <section class="mb-4">
+    <h2 class="cl-docs__heading">Lizenz</h2>
+    <p>MIT License – © 2026 Noelp Max</p>
+  </section>
+
+</div>
+
+<style>
+  .cl-docs__hero {
+    padding: 2rem 0 1rem;
+  }
+  .cl-docs__logo {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--cl-brand, #6b21a8);
+    letter-spacing: -0.03em;
+    margin-bottom: 0.25rem;
+  }
+  .cl-docs__tagline {
+    font-size: 1.125rem;
+    color: #6b7280;
+  }
+  .cl-docs__badge {
+    display: inline-block;
+    padding: 0.25em 0.75em;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #f3e8ff;
+    color: #6b21a8;
+    border: 1px solid #e9d5ff;
+  }
+  .cl-docs__badge--green {
+    background: #ecfdf5;
+    color: #065f46;
+    border-color: #a7f3d0;
+  }
+  .cl-docs__badge--blue {
+    background: #eff6ff;
+    color: #1e40af;
+    border-color: #bfdbfe;
+  }
+  .cl-docs__heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e1b2e;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f3e8ff;
+  }
+  .cl-docs__card {
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    height: 100%;
+  }
+  .cl-docs__card h3 {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+  .cl-docs__card ul {
+    padding-left: 1.25rem;
+    margin: 0;
+  }
+  .cl-docs__card li {
+    font-size: 0.875rem;
+    color: #4b5563;
+    margin-bottom: 0.375rem;
+    line-height: 1.5;
+  }
+  .cl-docs__code {
+    background: #1e1b2e;
+    color: #e9d5ff;
+    padding: 1rem 1.25rem;
+    border-radius: 0.625rem;
+    font-size: 0.8125rem;
+    overflow-x: auto;
+    margin-bottom: 1.25rem;
+  }
+  .cl-docs__code code {
+    color: inherit;
+    background: none;
+  }
+  .cl-docs h3 {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.625rem;
+    color: #374151;
+  }
+  .cl-docs p, .cl-docs li {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: #4b5563;
+  }
+  .cl-docs code {
+    background: #f3e8ff;
+    color: #6b21a8;
+    padding: 0.15em 0.4em;
+    border-radius: 0.25rem;
+    font-size: 0.8125rem;
+  }
+  .cl-docs .table code {
+    white-space: nowrap;
+  }
+  .cl-docs .table th {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #6b7280;
+    border-bottom-color: #e5e7eb;
+  }
+  .cl-docs .table td {
+    font-size: 0.875rem;
+    vertical-align: middle;
+  }
+</style>
+{% endblock %}

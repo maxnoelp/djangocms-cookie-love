@@ -1,0 +1,62 @@
+{% load i18n %}
+<div class="cl-group" data-group-slug="{{ group.slug }}">
+  <div class="cl-group__header">
+    <div class="cl-group__info">
+      <h4 class="cl-group__name">{{ group.name }}</h4>
+      {% if group.is_required %}
+      <span class="badge bg-secondary cl-group__badge">{% trans "Always Active" %}</span>
+      {% endif %}
+    </div>
+    {% include "djangocms_cookie_love/includes/toggle_switch.html" with group=group %}
+  </div>
+  <span class="cl-group__hint" data-group-slug="{{ group.slug }}"></span>
+  <p class="cl-group__description">{{ group.description }}</p>
+
+  {% with cookies=group.cookie_items.all %}
+  {% if cookies %}
+  <details class="cl-group__details">
+    <summary>{% trans "Show cookies" %} ({{ cookies|length }})</summary>
+    <table class="table table-sm cl-group__table">
+      <thead>
+        <tr>
+          <th class="cl-cookie-item__check-col"></th>
+          <th>{% trans "Name" %}</th>
+          <th>{% trans "Provider" %}</th>
+          <th>{% trans "Duration" %}</th>
+          <th>{% trans "Purpose" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cookie in cookies %}
+        {% include "djangocms_cookie_love/includes/cookie_item.html" with cookie=cookie group=group %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </details>
+  {% elif group.cookies %}
+  <details class="cl-group__details">
+    <summary>{% trans "Show cookies" %} ({{ group.cookies|length }})</summary>
+    <table class="table table-sm cl-group__table">
+      <thead>
+        <tr>
+          <th>{% trans "Name" %}</th>
+          <th>{% trans "Provider" %}</th>
+          <th>{% trans "Duration" %}</th>
+          <th>{% trans "Purpose" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cookie in group.cookies %}
+        <tr>
+          <td>{{ cookie.name }}</td>
+          <td>{{ cookie.provider }}</td>
+          <td>{{ cookie.duration }}</td>
+          <td>{{ cookie.purpose }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </details>
+  {% endif %}
+  {% endwith %}
+</div>

@@ -1,0 +1,102 @@
+{% load cms_tags sekizai_tags static i18n cookie_love_tags %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% page_attribute "page_title" %} – Cookie Love Example</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YcnS/1p8tMQ1eFtS0nHIDAuA07RM06Gj5Mf"
+          crossorigin="anonymous">
+    <style>
+        :root {
+            --cl-brand: #6b21a8;
+            --cl-brand-dark: #581c87;
+            --cl-brand-light: #f3e8ff;
+        }
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            color: #1e1b2e;
+            background: #fafafa;
+        }
+        .cl-navbar {
+            background: var(--cl-brand);
+            border: none;
+            box-shadow: 0 2px 12px rgba(107, 33, 168, 0.15);
+        }
+        .cl-navbar .navbar-brand {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            font-size: 1.125rem;
+            color: #fff;
+        }
+        .cl-navbar .navbar-brand:hover {
+            color: var(--cl-brand-light);
+        }
+        .cl-navbar .nav-link {
+            color: rgba(255,255,255,0.8);
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+        .cl-navbar .nav-link:hover {
+            color: #fff;
+        }
+        main.container {
+            background: #fff;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            margin-top: 1.5rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            min-height: 40vh;
+        }
+        footer a {
+            color: var(--cl-brand);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    {% render_block "css" %}
+</head>
+<body>
+    {% cms_toolbar %}
+
+    <nav class="navbar navbar-expand-lg cl-navbar mb-0">
+        <div class="container">
+            <a class="navbar-brand" href="/">🍪 Cookie Love</a>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/">Admin</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        {% block content %}
+            {% placeholder "content" %}
+        {% endblock %}
+    </main>
+
+    <footer class="container mt-5 mb-3 text-center text-muted">
+        <hr>
+        <p>
+            Cookie Love Example Project &middot;
+            <a href="#" onclick="CookieLove.openSettings(); return false;">
+                Cookie-Einstellungen ändern
+            </a>
+        </p>
+    </footer>
+
+    {% cookie_love_banner %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+    {% render_block "js" %}
+</body>
+</html>

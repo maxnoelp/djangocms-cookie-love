@@ -1,0 +1,9 @@
+<div class="form-check form-switch cl-toggle">
+  <input class="form-check-input cl-toggle__input"
+         type="checkbox"
+         role="switch"
+         id="cl-toggle-{{ group.slug }}"
+         data-group-slug="{{ group.slug }}"
+         {% if group.is_required %}checked disabled{% endif %}
+         aria-label="{{ group.name }}">
+</div>

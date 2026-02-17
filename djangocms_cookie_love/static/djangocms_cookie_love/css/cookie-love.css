@@ -1,0 +1,561 @@
+/* ==========================================================================
+   Cookie Love – Cookie Consent Banner & Settings Modal
+   Bootstrap 5 compatible, BEM naming with `cl-` prefix
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   CSS Custom Properties (Theming)
+   -------------------------------------------------------------------------- */
+
+:root {
+  --cl-primary: #6b21a8;
+  --cl-primary-hover: #581c87;
+  --cl-primary-light: #f3e8ff;
+  --cl-primary-subtle: #ede4f5;
+  --cl-bg: #ffffff;
+  --cl-text: #1e1b2e;
+  --cl-text-muted: #6b7280;
+  --cl-border: #e5e7eb;
+  --cl-shadow: 0 -4px 32px rgba(107, 33, 168, 0.08);
+  --cl-z-index: 9999;
+  --cl-modal-z-index: 10000;
+  --cl-border-radius: 1rem;
+  --cl-border-radius-sm: 0.625rem;
+  --cl-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --cl-max-width: 720px;
+  --cl-font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+   Banner – Shared
+   -------------------------------------------------------------------------- */
+
+.cl-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: var(--cl-z-index);
+  background: var(--cl-bg);
+  color: var(--cl-text);
+  box-shadow: var(--cl-shadow);
+  padding: 1.5rem 1rem;
+  font-family: var(--cl-font);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  border-top: 3px solid var(--cl-primary);
+}
+
+.cl-banner__container {
+  max-width: var(--cl-max-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cl-banner__content {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.cl-banner__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: var(--cl-primary);
+  letter-spacing: -0.01em;
+}
+
+.cl-banner__text {
+  margin: 0 0 0.75rem;
+  color: var(--cl-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+.cl-banner__links {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.8125rem;
+}
+
+.cl-banner__link {
+  color: var(--cl-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity var(--cl-transition);
+}
+
+.cl-banner__link:hover {
+  opacity: 0.7;
+}
+
+.cl-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Banner Position Variants
+   -------------------------------------------------------------------------- */
+
+.cl-banner--bottom {
+  bottom: 0;
+  border-top: 3px solid var(--cl-primary);
+  border-radius: var(--cl-border-radius) var(--cl-border-radius) 0 0;
+}
+
+.cl-banner--top {
+  top: 0;
+  border-top: none;
+  border-bottom: 3px solid var(--cl-primary);
+  box-shadow: 0 4px 32px rgba(107, 33, 168, 0.08);
+  border-radius: 0 0 var(--cl-border-radius) var(--cl-border-radius);
+}
+
+.cl-banner--center {
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30, 27, 46, 0.6);
+  backdrop-filter: blur(4px);
+  padding: 1rem;
+  border-top: none;
+}
+
+.cl-banner--center .cl-banner__container {
+  background: var(--cl-bg);
+  border-radius: var(--cl-border-radius);
+  padding: 2rem;
+  max-width: var(--cl-max-width);
+  box-shadow: 0 8px 40px rgba(107, 33, 168, 0.15);
+  border: 1px solid var(--cl-border);
+}
+
+/* --------------------------------------------------------------------------
+   Settings Modal
+   -------------------------------------------------------------------------- */
+
+.cl-modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--cl-modal-z-index);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.cl-modal__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 27, 46, 0.6);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+}
+
+.cl-modal__dialog {
+  position: relative;
+  background: var(--cl-bg);
+  border-radius: var(--cl-border-radius);
+  box-shadow: 0 8px 40px rgba(107, 33, 168, 0.15);
+  max-width: var(--cl-max-width);
+  width: 100%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--cl-border);
+}
+
+.cl-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--cl-border);
+  background: var(--cl-primary-light);
+}
+
+.cl-modal__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--cl-primary);
+}
+
+.cl-modal__close {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--cl-text-muted);
+  transition: color var(--cl-transition);
+}
+
+.cl-modal__close:hover {
+  color: var(--cl-primary);
+}
+
+.cl-modal__body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.cl-modal__description {
+  margin-bottom: 1.25rem;
+  color: var(--cl-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+.cl-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.625rem;
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--cl-border);
+  background: #fafafa;
+}
+
+/* --------------------------------------------------------------------------
+   Cookie Group
+   -------------------------------------------------------------------------- */
+
+.cl-group {
+  padding: 1.125rem 0;
+  border-bottom: 1px solid var(--cl-border);
+}
+
+.cl-group:last-child {
+  border-bottom: none;
+}
+
+.cl-group__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.cl-group__info {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex: 1;
+}
+
+.cl-group__name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--cl-text);
+}
+
+.cl-group__badge {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  background: var(--cl-primary-subtle) !important;
+  color: var(--cl-primary) !important;
+  padding: 0.2em 0.6em;
+  border-radius: 999px;
+}
+
+.cl-group__description {
+  margin: 0.375rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--cl-text-muted);
+  line-height: 1.55;
+}
+
+.cl-group__details {
+  margin-top: 0.75rem;
+}
+
+.cl-group__details summary {
+  font-size: 0.8125rem;
+  color: var(--cl-primary);
+  cursor: pointer;
+  user-select: none;
+  font-weight: 500;
+  transition: opacity var(--cl-transition);
+}
+
+.cl-group__details summary:hover {
+  opacity: 0.7;
+}
+
+.cl-group__table {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+}
+
+.cl-group__table th {
+  color: var(--cl-text-muted);
+  font-weight: 600;
+  border-bottom-color: var(--cl-border);
+}
+
+/* --------------------------------------------------------------------------
+   Individual Cookie Item (within group detail table)
+   -------------------------------------------------------------------------- */
+
+.cl-cookie-item {
+  transition: background-color var(--cl-transition);
+}
+
+.cl-cookie-item:hover {
+  background-color: var(--cl-primary-light);
+}
+
+.cl-cookie-item__check-col {
+  width: 2rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.cl-cookie-item__checkbox {
+  cursor: pointer;
+  margin: 0;
+}
+
+.cl-cookie-item__checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.cl-cookie-item__checkbox:focus {
+  box-shadow: 0 0 0 3px rgba(107, 33, 168, 0.15);
+  border-color: var(--cl-primary);
+}
+
+.cl-cookie-item__name {
+  font-weight: 500;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  font-size: 0.8125rem;
+}
+
+.cl-cookie-item__provider,
+.cl-cookie-item__duration,
+.cl-cookie-item__purpose {
+  font-size: 0.8125rem;
+  color: var(--cl-text-muted);
+}
+
+/* Indeterminate state for group toggle */
+.cl-toggle__input:indeterminate {
+  background-color: var(--cl-primary-subtle);
+  border-color: var(--cl-primary);
+  opacity: 0.8;
+}
+
+/* --------------------------------------------------------------------------
+   Group Status Hint
+   -------------------------------------------------------------------------- */
+
+.cl-group__hint {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--cl-text-muted);
+  margin-top: 0.125rem;
+  padding: 0;
+  white-space: nowrap;
+  min-height: 1.125rem;
+}
+
+.cl-group__hint--all {
+  color: var(--cl-primary);
+  font-weight: 500;
+}
+
+.cl-group__hint--partial {
+  color: #d97706;
+  font-weight: 500;
+}
+
+.cl-group__hint--none {
+  color: var(--cl-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Toggle Switch (Bootstrap form-switch override)
+   -------------------------------------------------------------------------- */
+
+.cl-toggle {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.cl-toggle__input {
+  width: 2.75em;
+  height: 1.375em;
+  cursor: pointer;
+  margin: 0;
+  border-color: var(--cl-border);
+  transition: background-color var(--cl-transition), border-color var(--cl-transition);
+}
+
+.cl-toggle__input:checked {
+  background-color: var(--cl-primary);
+  border-color: var(--cl-primary);
+}
+
+.cl-toggle__input:focus {
+  box-shadow: 0 0 0 3px rgba(107, 33, 168, 0.15);
+  border-color: var(--cl-primary);
+}
+
+.cl-toggle__input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+
+.cl-btn {
+  white-space: nowrap;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.5rem;
+  transition: all var(--cl-transition);
+  letter-spacing: 0.01em;
+}
+
+.cl-btn--accept {
+  background: var(--cl-primary) !important;
+  border-color: var(--cl-primary) !important;
+  color: #fff !important;
+}
+
+.cl-btn--accept:hover {
+  background: var(--cl-primary-hover) !important;
+  border-color: var(--cl-primary-hover) !important;
+}
+
+.cl-btn--settings {
+  border-color: var(--cl-primary) !important;
+  color: var(--cl-primary) !important;
+  background: transparent !important;
+}
+
+.cl-btn--settings:hover {
+  background: var(--cl-primary-light) !important;
+}
+
+.cl-btn--reject {
+  border-color: var(--cl-border) !important;
+  color: var(--cl-text-muted) !important;
+  background: transparent !important;
+}
+
+.cl-btn--reject:hover {
+  border-color: var(--cl-text-muted) !important;
+  color: var(--cl-text) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Animations
+   -------------------------------------------------------------------------- */
+
+.cl-banner[data-cl-visible="true"] {
+  animation: cl-slide-up 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cl-banner--top[data-cl-visible="true"] {
+  animation: cl-slide-down 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cl-banner--center[data-cl-visible="true"],
+.cl-modal[data-cl-visible="true"] {
+  animation: cl-fade-in 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes cl-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cl-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cl-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .cl-banner[data-cl-visible="true"],
+  .cl-modal[data-cl-visible="true"] {
+    animation: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 575.98px) {
+  .cl-banner__container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cl-banner__actions {
+    flex-direction: column;
+  }
+
+  .cl-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .cl-modal__dialog {
+    max-height: 95vh;
+  }
+
+  .cl-group__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Print – hide banner & modal
+   -------------------------------------------------------------------------- */
+
+@media print {
+  .cl-banner,
+  .cl-modal {
+    display: none !important;
+  }
+}

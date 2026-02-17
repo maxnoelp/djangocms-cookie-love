@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="cl-docs">
+  <h1 class="cl-docs__heading">Datenschutzerklärung</h1>
+
+  <section class="mb-4">
+    <h2>1. Verantwortliche Stelle</h2>
+    <p>
+      Beispiel GmbH<br>
+      Musterstraße 1<br>
+      12345 Musterstadt<br>
+      E-Mail: datenschutz@beispiel.de
+    </p>
+  </section>
+
+  <section class="mb-4">
+    <h2>2. Cookies</h2>
+    <p>
+      Diese Website verwendet Cookies. Cookies sind kleine Textdateien, die auf Ihrem Endgerät
+      gespeichert werden. Einige Cookies sind technisch notwendig, während andere uns helfen,
+      diese Website und Ihre Erfahrung zu verbessern.
+    </p>
+    <p>
+      Sie können Ihre Cookie-Einstellungen jederzeit über unseren
+      <a href="#" onclick="CookieLove.openSettings(); return false;">Cookie-Einstellungen-Dialog</a>
+      anpassen oder widerrufen.
+    </p>
+
+    <h3>2.1 Notwendige Cookies</h3>
+    <p>
+      Diese Cookies sind für den Betrieb der Website unerlässlich. Sie ermöglichen grundlegende
+      Funktionen wie Session-Verwaltung und CSRF-Schutz. Ohne diese Cookies kann die Website
+      nicht ordnungsgemäß funktionieren.
+    </p>
+
+    <h3>2.2 Analyse-Cookies</h3>
+    <p>
+      Mit Ihrer Einwilligung verwenden wir Analyse-Cookies, um zu verstehen, wie Besucher
+      unsere Website nutzen. Diese Daten helfen uns, die Website zu verbessern. Alle Daten
+      werden anonymisiert verarbeitet.
+    </p>
+
+    <h3>2.3 Marketing-Cookies</h3>
+    <p>
+      Marketing-Cookies werden verwendet, um Besuchern relevante Werbung anzuzeigen.
+      Diese Cookies werden nur mit Ihrer ausdrücklichen Einwilligung gesetzt.
+    </p>
+  </section>
+
+  <section class="mb-4">
+    <h2>3. Ihre Rechte</h2>
+    <p>Sie haben das Recht auf:</p>
+    <ul>
+      <li>Auskunft über Ihre gespeicherten personenbezogenen Daten</li>
+      <li>Berichtigung unrichtiger Daten</li>
+      <li>Löschung Ihrer Daten</li>
+      <li>Einschränkung der Verarbeitung</li>
+      <li>Datenübertragbarkeit</li>
+      <li>Widerspruch gegen die Verarbeitung</li>
+      <li>Widerruf Ihrer Einwilligung jederzeit</li>
+    </ul>
+  </section>
+
+  <section class="mb-4">
+    <h2>4. Cookie-Einwilligung verwalten</h2>
+    <p>
+      Sie können Ihre Cookie-Einwilligung jederzeit anpassen oder widerrufen:
+    </p>
+    <button class="btn btn-sm" style="background: #6b21a8; color: #fff;"
+            onclick="CookieLove.openSettings(); return false;">
+      🍪 Cookie-Einstellungen öffnen
+    </button>
+  </section>
+</div>
+
+<style>
+  .cl-docs h2 { font-size: 1.25rem; font-weight: 700; color: #1e1b2e; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .cl-docs h3 { font-size: 1rem; font-weight: 600; color: #374151; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+  .cl-docs p, .cl-docs li { font-size: 0.9375rem; line-height: 1.65; color: #4b5563; }
+  .cl-docs a { color: #6b21a8; }
+</style>
+{% endblock %}

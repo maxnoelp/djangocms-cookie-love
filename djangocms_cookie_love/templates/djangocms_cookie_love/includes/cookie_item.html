@@ -1,0 +1,18 @@
+{% load i18n %}
+<tr class="cl-cookie-item"
+    data-cookie-slug="{{ cookie.slug }}"
+    data-group-slug="{{ group.slug }}">
+  <td class="cl-cookie-item__check-col">
+    <input class="form-check-input cl-cookie-item__checkbox"
+           type="checkbox"
+           id="cl-cookie-{{ group.slug }}-{{ cookie.slug }}"
+           data-cookie-slug="{{ cookie.slug }}"
+           data-group-slug="{{ group.slug }}"
+           {% if cookie.is_required or group.is_required %}checked disabled{% endif %}
+           aria-label="{{ cookie.name }}">
+  </td>
+  <td class="cl-cookie-item__name">{{ cookie.name }}</td>
+  <td class="cl-cookie-item__provider">{{ cookie.provider }}</td>
+  <td class="cl-cookie-item__duration">{{ cookie.duration }}</td>
+  <td class="cl-cookie-item__purpose">{{ cookie.purpose }}</td>
+</tr>

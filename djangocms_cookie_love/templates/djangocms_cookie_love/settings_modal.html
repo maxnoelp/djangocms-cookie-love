@@ -1,0 +1,41 @@
+{% load i18n %}
+<div id="cookie-love-settings"
+     class="cl-modal"
+     role="dialog"
+     aria-label="{% trans 'Cookie Settings' %}"
+     aria-modal="true"
+     style="display: none;">
+
+  <div class="cl-modal__overlay" data-cl-action="close-settings"></div>
+
+  <div class="cl-modal__dialog">
+    <div class="cl-modal__header">
+      <h3 class="cl-modal__title">{{ cookie_config.title }}</h3>
+      <button type="button"
+              class="btn-close cl-modal__close"
+              data-cl-action="close-settings"
+              aria-label="{% trans 'Close' %}"></button>
+    </div>
+
+    <div class="cl-modal__body">
+      <p class="cl-modal__description">{{ cookie_config.description }}</p>
+
+      {% for group in cookie_groups %}
+        {% include "djangocms_cookie_love/includes/cookie_group.html" with group=group %}
+      {% endfor %}
+    </div>
+
+    <div class="cl-modal__footer">
+      <button type="button"
+              class="btn btn-outline-secondary cl-btn"
+              data-cl-action="reject">
+        {{ cookie_config.reject_all_label }}
+      </button>
+      <button type="button"
+              class="btn btn-primary cl-btn"
+              data-cl-action="save-settings">
+        {{ cookie_config.save_label }}
+      </button>
+    </div>
+  </div>
+</div>
