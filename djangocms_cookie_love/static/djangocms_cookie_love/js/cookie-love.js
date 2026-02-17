@@ -471,11 +471,9 @@
   // ---------------------------------------------------------------------------
 
   function checkExistingConsent() {
-    var consentId = getCookie("cookie_love_consent");
-    if (!consentId) {
-      show(state.banner);
-      return;
-    }
+    // Always check via API – the consent cookie is HttpOnly and cannot
+    // be read by JavaScript.  The browser will send it automatically
+    // with the XHR request, and the server will look it up.
 
     // Check consent status via API
     var xhr = new XMLHttpRequest();
