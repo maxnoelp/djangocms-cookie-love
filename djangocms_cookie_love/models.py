@@ -2,6 +2,7 @@
 
 import uuid
 
+from cms.models.fields import PageField
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -27,15 +28,35 @@ class CookieConsentConfig(models.Model):
             "help us understand how you use our site."
         ),
     )
+
+    privacy_policy_page = PageField(
+        blank=True,
+        null=True,
+        verbose_name=_("Privacy Policy Page"),
+        related_name="cookie_config_privacy_configs",
+        help_text=_("Select an internal CMS page for the privacy policy"),
+        on_delete=models.SET_NULL,
+    )
+
     privacy_policy_url = models.URLField(
         blank=True,
-        verbose_name=_("Privacy Policy URL"),
-        help_text=_("Link to privacy policy page"),
+        verbose_name=_("Privacy Policy URL (external)"),
+        help_text=_("External URL – only used if no internal page is selected"),
     )
+
+    imprint_page = PageField(
+        blank=True,
+        null=True,
+        verbose_name=_("Imprint Page"),
+        related_name="cookie_config_imprint_configs",
+        help_text=_("Select an internal CMS page for the imprint"),
+        on_delete=models.SET_NULL,
+    )
+
     imprint_url = models.URLField(
         blank=True,
-        verbose_name=_("Imprint URL"),
-        help_text=_("Link to imprint/legal notice page"),
+        verbose_name=_("Imprint URL (external)"),
+        help_text=_("External URL – only used if no internal page is selected"),
     )
 
     # Design options
@@ -99,6 +120,18 @@ class CookieConsentConfig(models.Model):
             CookieConsentConfig.objects.filter(is_active=True).exclude(pk=self.pk).update(is_active=False)
         super().save(*args, **kwargs)
 
+    def get_privacy_policy_link(self):
+        """Return the URL for the privacy policy, preferring internal page if set."""
+        if self.privacy_policy_page:
+            return self.privacy_policy_page.get_absolute_url()
+        return self.privacy_policy_url or ""
+
+    def get_imprint_link(self):
+        """Return the URL for the imprint, preferring internal page if set."""
+        if self.imprint_page:
+            return self.imprint_page.get_absolute_url()
+        return self.imprint_url or ""
+
     @classmethod
     def get_active(cls):
         """Return the currently active configuration, or None."""
@@ -113,8 +146,8 @@ class CookieConsentConfig(models.Model):
         return {
             "title": str(self.title),
             "description": str(self.description),
-            "privacy_policy_url": self.privacy_policy_url,
-            "imprint_url": self.imprint_url,
+            "privacy_policy_url": self.get_privacy_policy_link(),
+            "imprint_url": self.get_imprint_link(),
             "position": self.position,
             "accept_all_label": str(self.accept_all_label),
             "reject_all_label": str(self.reject_all_label),

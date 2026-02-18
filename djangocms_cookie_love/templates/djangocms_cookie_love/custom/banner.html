@@ -1,0 +1,56 @@
+{% load i18n static %}
+{% if cookie_config %}
+<div id="cookie-love-banner"
+     class="cl-banner cl-banner--{{ cookie_config.position }}"
+     role="dialog"
+     aria-label="{% trans 'Cookie Consent' %}"
+     aria-modal="false"
+     data-version="{{ current_version.version|default:'' }}"
+     data-config-url="{% url 'cookie_love:api_config' %}"
+     data-consent-url="{% url 'cookie_love:api_consent' %}"
+     data-revoke-url="{% url 'cookie_love:api_revoke' %}"
+     data-csrf-token="{{ csrf_token }}"
+     style="display: none;">
+
+  <div class="cl-banner__container container">
+    <div class="cl-banner__content">
+      <h2 class="cl-banner__title">{{ cookie_config.title }}</h2>
+      <p class="cl-banner__text">{{ cookie_config.description }}</p>
+
+      <div class="cl-banner__links">
+        {% if cookie_config.get_privacy_policy_link %}
+        <a href="{{ cookie_config.get_privacy_policy_link }}" class="cl-banner__link" target="_blank" rel="noopener">
+          {% trans "Privacy Policy" %}
+        </a>
+        {% endif %}
+        {% if cookie_config.get_imprint_link %}
+        <a href="{{ cookie_config.get_imprint_link }}" class="cl-banner__link" target="_blank" rel="noopener">
+          {% trans "Imprint" %}
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="cl-banner__actions">
+      <button type="button" class="btn btn-outline-secondary cl-btn cl-btn--reject"
+              data-cl-action="reject">
+        {{ cookie_config.reject_all_label }}
+      </button>
+      <button type="button" class="btn btn-outline-primary cl-btn cl-btn--settings"
+              data-cl-action="settings">
+        {{ cookie_config.settings_label }}
+      </button>
+      <button type="button" class="btn btn-primary cl-btn cl-btn--accept"
+              data-cl-action="accept-all">
+        {{ cookie_config.accept_all_label }}
+      </button>
+    </div>
+  </div>
+</div>
+
+{% include "djangocms_cookie_love/custom/settings_modal.html" %}
+
+<link rel="stylesheet" href="{% static 'djangocms_cookie_love/css/cookie-love-bridge.css' %}">
+<link rel="stylesheet" href="{% static 'djangocms_cookie_love/css/cookie-love.css' %}">
+<script src="{% static 'djangocms_cookie_love/js/cookie-love.js' %}" defer></script>
+{% endif %}

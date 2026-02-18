@@ -1,0 +1,66 @@
+{% load i18n static %}
+{% if cookie_config %}
+<div id="cookie-love-banner"
+     class="cl-banner cl-banner--{{ cookie_config.position }} bg-white shadow-lg p-4 md:p-6 border-t-[3px] border-purple-700 font-sans text-sm leading-relaxed text-gray-800"
+     role="dialog"
+     aria-label="{% trans 'Cookie Consent' %}"
+     aria-modal="false"
+     data-version="{{ current_version.version|default:'' }}"
+     data-config-url="{% url 'cookie_love:api_config' %}"
+     data-consent-url="{% url 'cookie_love:api_consent' %}"
+     data-revoke-url="{% url 'cookie_love:api_revoke' %}"
+     data-csrf-token="{{ csrf_token }}"
+     style="display: none;">
+
+  <div class="cl-banner__container max-w-3xl mx-auto flex flex-col gap-4 md:gap-5">
+    <div class="cl-banner__content">
+      <h2 class="cl-banner__title text-base md:text-lg font-bold text-purple-700 mb-1">
+        {{ cookie_config.title }}
+      </h2>
+      <p class="cl-banner__text text-sm text-gray-500 leading-relaxed mb-2">
+        {{ cookie_config.description }}
+      </p>
+
+      <div class="cl-banner__links flex gap-3 md:gap-5 text-xs md:text-sm">
+        {% if cookie_config.get_privacy_policy_link %}
+        <a href="{{ cookie_config.get_privacy_policy_link }}"
+           class="cl-banner__link text-purple-700 no-underline font-medium hover:opacity-70 transition-opacity"
+           target="_blank" rel="noopener">
+          {% trans "Privacy Policy" %}
+        </a>
+        {% endif %}
+        {% if cookie_config.get_imprint_link %}
+        <a href="{{ cookie_config.get_imprint_link }}"
+           class="cl-banner__link text-purple-700 no-underline font-medium hover:opacity-70 transition-opacity"
+           target="_blank" rel="noopener">
+          {% trans "Imprint" %}
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="cl-banner__actions flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-2.5">
+      <button type="button"
+              class="cl-btn cl-btn--reject w-full sm:w-auto border border-gray-300 text-gray-500 hover:border-gray-500 hover:text-gray-700 text-sm font-semibold py-2.5 px-5 rounded-lg transition-colors text-center cursor-pointer"
+              data-cl-action="reject">
+        {{ cookie_config.reject_all_label }}
+      </button>
+      <button type="button"
+              class="cl-btn cl-btn--settings w-full sm:w-auto border border-purple-700 text-purple-700 hover:bg-purple-50 text-sm font-semibold py-2.5 px-5 rounded-lg transition-colors text-center cursor-pointer"
+              data-cl-action="settings">
+        {{ cookie_config.settings_label }}
+      </button>
+      <button type="button"
+              class="cl-btn cl-btn--accept w-full sm:w-auto bg-purple-700 hover:bg-purple-800 text-white text-sm font-semibold py-2.5 px-5 rounded-lg transition-colors text-center cursor-pointer"
+              data-cl-action="accept-all">
+        {{ cookie_config.accept_all_label }}
+      </button>
+    </div>
+  </div>
+</div>
+
+{% include "djangocms_cookie_love/tailwind/settings_modal.html" %}
+
+<link rel="stylesheet" href="{% static 'djangocms_cookie_love/css/cookie-love-bridge.css' %}">
+<script src="{% static 'djangocms_cookie_love/js/cookie-love.js' %}" defer></script>
+{% endif %}

@@ -65,8 +65,8 @@ class TestGDPRCompliance:
 
     def test_privacy_links_present(self, config):
         """GDPR: Config supports privacy policy and imprint URLs."""
-        assert config.privacy_policy_url != ""
-        assert config.imprint_url != ""
+        assert config.get_privacy_policy_link() != ""
+        assert config.get_imprint_link() != ""
 
     def test_granular_control(self, essential_group, analytics_group):
         """GDPR: Users can control consent per cookie group."""

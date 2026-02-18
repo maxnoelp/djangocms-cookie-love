@@ -35,8 +35,8 @@ def config_view(request):
     data = {
         "title": str(config.title),
         "description": str(config.description),
-        "privacy_policy_url": config.privacy_policy_url,
-        "imprint_url": config.imprint_url,
+        "privacy_policy_url": config.get_privacy_policy_link(),
+        "imprint_url": config.get_imprint_link(),
         "position": config.position,
         "buttons": {
             "accept_all": str(config.accept_all_label),

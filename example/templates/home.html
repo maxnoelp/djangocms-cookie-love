@@ -16,6 +16,66 @@
     </div>
   </div>
 
+  <!-- Script-Blocking Test Dashboard -->
+  <section class="mb-5">
+    <h2 class="cl-docs__heading">🧪 Script-Blocking Test</h2>
+    <p class="text-muted">
+      Zeigt an, welche Test-Scripts nach der Cookie-Einwilligung aktiviert wurden.
+      <strong>Vor dem Consent</strong> sollte alles "Blockiert" sein.
+      Nach Zustimmung wechselt der Status auf "Aktiv".
+    </p>
+    <table class="table table-bordered">
+      <thead class="table-light">
+        <tr>
+          <th>Script</th>
+          <th>Gruppe / Cookie</th>
+          <th>Typ</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>analytics</code> group script</td>
+          <td><span class="badge bg-info">analytics</span></td>
+          <td>Gruppen-Level</td>
+          <td id="test-status-analytics" style="color: #dc2626; font-weight: 600;">🚫 Blockiert</td>
+        </tr>
+        <tr>
+          <td><code>_ga</code> cookie script</td>
+          <td><span class="badge bg-info">analytics</span> → <code>ga</code></td>
+          <td>Cookie-Level</td>
+          <td id="test-status-ga" style="color: #dc2626; font-weight: 600;">🚫 Blockiert</td>
+        </tr>
+        <tr>
+          <td><code>marketing</code> group script</td>
+          <td><span class="badge bg-warning text-dark">marketing</span></td>
+          <td>Gruppen-Level</td>
+          <td id="test-status-marketing" style="color: #dc2626; font-weight: 600;">🚫 Blockiert</td>
+        </tr>
+        <tr>
+          <td><code>_fbp</code> cookie script</td>
+          <td><span class="badge bg-warning text-dark">marketing</span> → <code>fbp</code></td>
+          <td>Cookie-Level</td>
+          <td id="test-status-fbp" style="color: #dc2626; font-weight: 600;">🚫 Blockiert</td>
+        </tr>
+        <tr>
+          <td><code>preferences</code> group script</td>
+          <td><span class="badge bg-secondary">preferences</span></td>
+          <td>Gruppen-Level</td>
+          <td id="test-status-preferences" style="color: #dc2626; font-weight: 600;">🚫 Blockiert</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="d-flex gap-2 mt-2">
+      <button class="btn btn-sm btn-outline-primary" onclick="CookieLove.openSettings(); return false;">
+        ⚙️ Cookie-Einstellungen öffnen
+      </button>
+      <button class="btn btn-sm btn-outline-danger" onclick="CookieLove.revokeConsent(); location.reload();">
+        🔄 Consent widerrufen &amp; Seite neu laden
+      </button>
+    </div>
+  </section>
+
   <!-- Features -->
   <section class="mb-5">
     <h2 class="cl-docs__heading">Was ist Cookie Love?</h2>

@@ -220,6 +220,8 @@
     hide(state.banner);
     hide(state.modal);
     if (state.modal) disableFocusTrap(state.modal);
+    // Reload the page so blocked resources are loaded with the new consent state
+    window.location.reload();
   }
 
   function notifyListeners(acceptedGroups, acceptedCookies) {

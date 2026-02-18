@@ -13,7 +13,9 @@ class CookieConsentConfigForm(forms.ModelForm):
         fields = [
             "title",
             "description",
+            "privacy_policy_page",
             "privacy_policy_url",
+            "imprint_page",
             "imprint_url",
             "position",
             "accept_all_label",
