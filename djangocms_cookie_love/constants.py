@@ -9,6 +9,9 @@ COOKIE_SECURE = getattr(settings, "COOKIE_LOVE_COOKIE_SECURE", True)
 COOKIE_SAMESITE = getattr(settings, "COOKIE_LOVE_COOKIE_SAMESITE", "Lax")
 COOKIE_HTTPONLY = getattr(settings, "COOKIE_LOVE_COOKIE_HTTPONLY", True)
 
+# Retention period for UserConsent records (GDPR Art. 5(1)(e) storage limitation)
+CONSENT_RETENTION_DAYS = getattr(settings, "COOKIE_LOVE_CONSENT_RETENTION_DAYS", 1095)  # 3 years
+
 # Default cookie groups created on first setup
 DEFAULT_COOKIE_GROUPS = [
     {

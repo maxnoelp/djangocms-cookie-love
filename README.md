@@ -169,6 +169,7 @@ COOKIE_LOVE_COOKIE_DURATION = 365                      # Days until consent expi
 COOKIE_LOVE_COOKIE_SECURE = True                       # Set to False for local dev (HTTP)
 COOKIE_LOVE_COOKIE_SAMESITE = "Lax"                    # SameSite policy
 COOKIE_LOVE_COOKIE_HTTPONLY = True                      # HttpOnly flag
+COOKIE_LOVE_CONSENT_RETENTION_DAYS = 1095              # Days to keep consent records (default: 3 years)
 ```
 
 ## Script Blocking
@@ -330,6 +331,29 @@ This package implements the following GDPR/TTDSG requirements:
 | IP anonymization                  | SHA-256 hash with configurable salt                          |
 | Version tracking                  | `ConsentVersion` with automatic re-consent                   |
 | Essential cookies without consent | `is_required` groups are always active                       |
+| Immutable audit trail             | Admin blocks add/change/delete on `UserConsent`              |
+| Storage limitation (Art. 5(1)(e)) | `purge_old_consents` management command (default: 3 years)   |
+| User-Agent storage                | Stored pseudonymously for audit purposes; mention in your privacy policy |
+
+### Data Retention
+
+Run the `purge_old_consents` command periodically (e.g. via cron or Celery beat) to delete
+consent records older than the configured retention period:
+
+```bash
+# Delete records older than 3 years (default)
+python manage.py purge_old_consents
+
+# Preview without deleting
+python manage.py purge_old_consents --dry-run
+
+# Custom retention period
+python manage.py purge_old_consents --days=730
+```
+
+> **Privacy Policy Note:** The `UserConsent` model stores the browser's User-Agent string alongside
+> the hashed IP address for audit trail purposes. No user account or raw IP is ever stored.
+> Mention this in your privacy policy.
 
 ## Further Reading
 
