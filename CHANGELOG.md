@@ -7,7 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] - Unreleased
+## [0.1.1] - 2026-04-25
+
+### Added
+
+- `setup_example` management command for cross-platform example project setup (replaces bash-only `setup.sh`)
+- Automatic `ConsentVersion 1.0` creation when a new `CookieConsentConfig` is saved
+
+### Fixed
+
+- Bootstrap 5.3.3 SRI integrity hash corrected in example base template
+
+### Changed
+
+- Expanded Theming section in README with full CSS custom properties reference, dark mode and corporate style examples, and template override instructions
+- Admin Interface section in README now documents automatic version creation and when to create new versions manually
+
+## [0.1.0] - 2026-04-25
 
 ### Added
 
