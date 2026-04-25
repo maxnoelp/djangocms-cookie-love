@@ -4,10 +4,49 @@ Kleines Django CMS Projekt zum manuellen Testen des Cookie-Consent-Banners.
 
 ## Setup
 
+### 1. Virtuelle Umgebung erstellen und aktivieren
+
+Zuerst im **Root-Verzeichnis** des Projekts (nicht im `example/`-Ordner):
+
+**Linux / macOS**
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+**Windows (PowerShell)**
+```powershell
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+### 2. Abhängigkeiten installieren
+
+```bash
+pip install -e ".[dev]"
+```
+
+### 3. Projekt initialisieren
+
+**Linux / macOS**
 ```bash
 cd example
 chmod +x setup.sh
 bash setup.sh
+```
+
+**Windows (PowerShell)**
+```powershell
+cd example
+
+python manage.py migrate
+
+$env:DJANGO_SUPERUSER_PASSWORD = "admin"
+python manage.py createsuperuser --username admin --email admin@example.com --noinput
+
+python manage.py shell -c "from django.contrib.sites.models import Site; s = Site.objects.get(pk=1); s.domain = 'localhost:8000'; s.name = 'Cookie Love Example'; s.save()"
+
+python manage.py collectstatic --noinput -v 0
 ```
 
 ## Server starten
