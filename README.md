@@ -244,19 +244,81 @@ document.addEventListener("cookie-love:revoke", function (e) {
 
 ## Theming
 
-Override CSS custom properties to match your brand:
+The banner and settings modal are styled with CSS custom properties. There are three levels of customisation, from a quick colour swap to a fully custom layout.
+
+### Level 1 – CSS Custom Properties (recommended)
+
+Add overrides anywhere in your CSS — no template changes needed:
 
 ```css
 :root {
-  --cl-primary: #6b21a8;
-  --cl-primary-hover: #581c87;
-  --cl-primary-subtle: #f3e8ff;
-  --cl-bg: #ffffff;
-  --cl-text: #1e1b2e;
-  --cl-border: #e5e7eb;
-  --cl-radius: 1rem;
+  --cl-primary: #e11d48;          /* Brand colour (buttons, titles, links) */
+  --cl-primary-hover: #be123c;    /* Hover state of the primary colour */
+  --cl-primary-light: #fff1f2;    /* Light tint (modal header background) */
+  --cl-primary-subtle: #ffe4e6;   /* Subtle tint (badge background) */
+  --cl-bg: #ffffff;               /* Banner / modal background */
+  --cl-text: #1e1b2e;             /* Primary text colour */
+  --cl-text-muted: #6b7280;       /* Secondary / description text */
+  --cl-border: #e5e7eb;           /* Divider and border colour */
+  --cl-shadow: 0 -4px 32px rgba(225, 29, 72, 0.08);  /* Banner shadow */
+  --cl-border-radius: 1rem;       /* Corner radius of banner and modal */
+  --cl-border-radius-sm: 0.625rem;/* Corner radius of buttons */
+  --cl-max-width: 720px;          /* Maximum width of banner / modal */
+  --cl-font: system-ui, sans-serif; /* Font stack */
+  --cl-z-index: 9999;             /* Banner z-index */
+  --cl-modal-z-index: 10000;      /* Settings modal z-index */
 }
 ```
+
+**Example: dark mode**
+
+```css
+:root {
+  --cl-bg: #1e1e2e;
+  --cl-text: #cdd6f4;
+  --cl-text-muted: #a6adc8;
+  --cl-border: #313244;
+  --cl-primary: #cba6f7;
+  --cl-primary-hover: #b4befe;
+  --cl-primary-light: #1e1e2e;
+  --cl-primary-subtle: #313244;
+}
+```
+
+**Example: square, full-width corporate style**
+
+```css
+:root {
+  --cl-border-radius: 0;
+  --cl-border-radius-sm: 0;
+  --cl-max-width: 100%;
+  --cl-primary: #003366;
+  --cl-primary-hover: #002244;
+  --cl-primary-light: #e6edf5;
+  --cl-primary-subtle: #ccdaeb;
+}
+```
+
+### Level 2 – Banner position
+
+Set the position directly in the Django admin (`bottom`, `top`, or `center`) — no code changes needed.
+
+### Level 3 – Template override
+
+Copy the templates you want to customise into your own `templates/` directory and edit them freely:
+
+```
+your_project/
+└── templates/
+    └── djangocms_cookie_love/
+        ├── banner.html           # Main banner
+        ├── settings_modal.html   # Settings modal wrapper
+        └── includes/
+            ├── cookie_group.html # Individual group row with toggle
+            └── cookie_item.html  # Individual cookie row with checkbox
+```
+
+Django's template loader will pick up your versions automatically — no settings change required.
 
 ## Admin Interface
 

@@ -46,9 +46,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourname/djangocms-cookie-love"
-Repository = "https://github.com/yourname/djangocms-cookie-love"
-Changelog = "https://github.com/yourname/djangocms-cookie-love/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/maxnoelp/djangocms-cookie-love"
+Repository = "https://github.com/maxnoelp/djangocms-cookie-love"
+Changelog = "https://github.com/maxnoelp/djangocms-cookie-love/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 include = ["djangocms_cookie_love*"]
