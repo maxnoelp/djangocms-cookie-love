@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     "sekizai",
     # Cookie Love
     "djangocms_cookie_love",
+    # Example app
+    "example",
 ]
 
 SITE_ID = 1

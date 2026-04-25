@@ -28,26 +28,12 @@ pip install -e ".[dev]"
 
 ### 3. Projekt initialisieren
 
-**Linux / macOS**
 ```bash
 cd example
-chmod +x setup.sh
-bash setup.sh
+python manage.py setup_example
 ```
 
-**Windows (PowerShell)**
-```powershell
-cd example
-
-python manage.py migrate
-
-$env:DJANGO_SUPERUSER_PASSWORD = "admin"
-python manage.py createsuperuser --username admin --email admin@example.com --noinput
-
-python manage.py shell -c "from django.contrib.sites.models import Site; s = Site.objects.get(pk=1); s.domain = 'localhost:8000'; s.name = 'Cookie Love Example'; s.save()"
-
-python manage.py collectstatic --noinput -v 0
-```
+Das funktioniert auf Linux, macOS und Windows gleich. Der Command führt Migrationen aus, legt den Superuser an, konfiguriert die Site-Domain, erstellt die Cookie-Konfiguration und sammelt Static Files.
 
 ## Server starten
 
