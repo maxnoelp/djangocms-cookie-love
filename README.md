@@ -322,9 +322,9 @@ Django's template loader will pick up your versions automatically — no setting
 
 ## Admin Interface
 
-1. **Cookie Consent Config** – Configure banner title, description, button labels, links, position
+1. **Cookie Consent Config** – Configure banner title, description, button labels, links, position. An initial consent version (`1.0`) is created automatically when you save a new config.
 2. **Cookie Groups** – Add/edit cookie categories with inline cookie management
-3. **Consent Versions** – Publish new versions to trigger re-consent
+3. **Consent Versions** – Publish new versions to trigger re-consent. Create a new version with `requires_reconsent=True` whenever you make a significant policy change — all users will be shown the banner again.
 4. **User Consents** – Read-only audit log with CSV export
 
 ## Middleware

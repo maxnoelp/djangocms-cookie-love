@@ -115,10 +115,17 @@ class CookieConsentConfig(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        # Singleton enforcement: deactivate other configs when saving as active
+        is_new = self.pk is None
         if self.is_active:
             CookieConsentConfig.objects.filter(is_active=True).exclude(pk=self.pk).update(is_active=False)
         super().save(*args, **kwargs)
+        if is_new and not self.versions.exists():
+            ConsentVersion.objects.create(
+                config=self,
+                version="1.0",
+                change_description="Initial version",
+                requires_reconsent=False,
+            )
 
     def get_privacy_policy_link(self):
         """Return the URL for the privacy policy, preferring internal page if set."""
