@@ -425,6 +425,25 @@ expected.
 > Don't crawl as staff/superuser — toolbar and admin assets inject cookies a
 > public visitor never sees.
 
+### 3. Reviewing discoveries in the admin
+
+Findings land in **Discovered Cookies**. The changelist defaults to filtering
+by *Unresolved* — switch the **Status** filter to *Resolved* or *All* to widen
+the view. For each `CookieGroup` a dynamic admin action is registered, named
+**Assign to cookie group: "&lt;Group name&gt;"**:
+
+1. Tick the rows you want to triage.
+2. Pick the matching action from the **Action** dropdown (one entry per cookie
+   group) and click **Go**.
+3. The action creates a `Cookie` in that group (skipped if a cookie with the
+   same name already exists), copies the discovered `domain` into `provider`,
+   inherits `is_required` from the group, and marks the discovered rows as
+   **resolved** so they drop out of the default queue.
+
+For everything else there are still the plain **Mark selected as
+resolved/unresolved** actions to dismiss noise (e.g. one-off third-party
+cookies you don't want to document).
+
 ## Development
 
 ```bash
