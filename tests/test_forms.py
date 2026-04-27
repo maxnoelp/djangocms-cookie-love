@@ -20,9 +20,9 @@ class TestCookieConsentConfigForm:
         expected = {
             "title",
             "description",
-            "privacy_policy_page",
+            "privacy_policy_path",
             "privacy_policy_url",
-            "imprint_page",
+            "imprint_path",
             "imprint_url",
             "position",
             "accept_all_label",

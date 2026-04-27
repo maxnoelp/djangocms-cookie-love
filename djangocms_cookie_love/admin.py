@@ -71,9 +71,9 @@ class CookieConsentConfigAdmin(admin.ModelAdmin):
             _("Links"),
             {
                 "fields": [
-                    "privacy_policy_page",
+                    "privacy_policy_path",
                     "privacy_policy_url",
-                    "imprint_page",
+                    "imprint_path",
                     "imprint_url",
                 ],
             },

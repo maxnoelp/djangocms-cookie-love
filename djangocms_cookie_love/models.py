@@ -2,7 +2,6 @@
 
 import uuid
 
-from cms.models.fields import PageField
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -31,34 +30,30 @@ class CookieConsentConfig(models.Model):
         ),
     )
 
-    privacy_policy_page = PageField(
+    privacy_policy_path = models.CharField(
+        max_length=500,
         blank=True,
-        null=True,
-        verbose_name=_("Privacy Policy Page"),
-        related_name="cookie_config_privacy_configs",
-        help_text=_("Select an internal CMS page for the privacy policy"),
-        on_delete=models.SET_NULL,
+        verbose_name=_("Privacy Policy Path"),
+        help_text=_("Internal path, e.g. /privacy/ – takes precedence over the external URL"),
     )
 
     privacy_policy_url = models.URLField(
         blank=True,
         verbose_name=_("Privacy Policy URL (external)"),
-        help_text=_("External URL – only used if no internal page is selected"),
+        help_text=_("External URL – only used if no internal path is set"),
     )
 
-    imprint_page = PageField(
+    imprint_path = models.CharField(
+        max_length=500,
         blank=True,
-        null=True,
-        verbose_name=_("Imprint Page"),
-        related_name="cookie_config_imprint_configs",
-        help_text=_("Select an internal CMS page for the imprint"),
-        on_delete=models.SET_NULL,
+        verbose_name=_("Imprint Path"),
+        help_text=_("Internal path, e.g. /imprint/ – takes precedence over the external URL"),
     )
 
     imprint_url = models.URLField(
         blank=True,
         verbose_name=_("Imprint URL (external)"),
-        help_text=_("External URL – only used if no internal page is selected"),
+        help_text=_("External URL – only used if no internal path is set"),
     )
 
     # Design options
@@ -130,16 +125,12 @@ class CookieConsentConfig(models.Model):
             )
 
     def get_privacy_policy_link(self):
-        """Return the URL for the privacy policy, preferring internal page if set."""
-        if self.privacy_policy_page:
-            return self.privacy_policy_page.get_absolute_url()
-        return self.privacy_policy_url or ""
+        """Return the URL for the privacy policy, preferring the internal path."""
+        return self.privacy_policy_path or self.privacy_policy_url or ""
 
     def get_imprint_link(self):
-        """Return the URL for the imprint, preferring internal page if set."""
-        if self.imprint_page:
-            return self.imprint_page.get_absolute_url()
-        return self.imprint_url or ""
+        """Return the URL for the imprint, preferring the internal path."""
+        return self.imprint_path or self.imprint_url or ""
 
     @classmethod
     def get_active(cls):
