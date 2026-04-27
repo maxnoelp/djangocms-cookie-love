@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "sekizai",
     # Cookie Love
     "djangocms_cookie_love",
+    "djangocms_cookie_love.contrib.cms.apps.CookieLoveCmsConfig",
     # Example app
     "example",
 ]

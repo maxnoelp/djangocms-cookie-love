@@ -7,7 +7,7 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("cookie-love/", include("djangocms_cookie_love.urls")),
+    path("cookie-love/api/", include("djangocms_cookie_love.urls")),
     path("", include("cms.urls")),
 ]
 

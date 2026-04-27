@@ -7,7 +7,7 @@ from . import views
 app_name = "cookie_love"
 
 urlpatterns = [
-    path("api/config/", views.config_view, name="api_config"),
-    path("api/consent/", views.consent_view, name="api_consent"),
-    path("api/consent/revoke/", views.revoke_view, name="api_revoke"),
+    path("config/", views.config_view, name="api_config"),
+    path("consent/", views.consent_view, name="api_consent"),
+    path("consent/revoke/", views.revoke_view, name="api_revoke"),
 ]
