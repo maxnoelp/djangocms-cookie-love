@@ -17,7 +17,7 @@
 | `__init__.py`                              | 2          | 0      | 100%     | –                      |
 | `admin.py`                                 | 71         | 0      | 100%     | –                      |
 | `apps.py`                                  | 6          | 0      | 100%     | –                      |
-| `cms_plugins.py`                           | 16         | 4      | 75%      | 23–32                  |
+| `contrib/cms/cms_plugins.py`               | 16         | 4      | 75%      | 23–32                  |
 | `constants.py`                             | 7          | 0      | 100%     | –                      |
 | `context_processors.py`                    | 2          | 0      | 100%     | –                      |
 | `forms.py`                                 | 13         | 0      | 100%     | –                      |
@@ -50,7 +50,7 @@
 
 | Area                                     | Reason                                                                                 |
 | ---------------------------------------- | -------------------------------------------------------------------------------------- |
-| `cms_plugins.py` (75%)                   | CMS plugin `render()` method requires full CMS page rendering context                  |
+| `contrib/cms/cms_plugins.py` (75%)       | CMS plugin `render()` method requires full CMS page rendering context                  |
 | `templatetags/cookie_love_tags.py` (79%) | Template tags that render full HTML blocks (tested indirectly via plugin tests)        |
 | `migrations/0004_cookie_model.py` (48%)  | Data migration reverse function and migration operations (standard Django boilerplate) |
 | `views.py` (95%)                         | Edge cases: missing config on GET, cookie ref parsing edge cases                       |

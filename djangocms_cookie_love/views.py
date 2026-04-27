@@ -16,7 +16,7 @@ from .models import Cookie, CookieConsentConfig, CookieGroup, UserConsent
 from .utils import get_client_ip, hash_ip
 
 # ---------------------------------------------------------------------------
-# GET /cookie-love/api/config/
+# GET <prefix>/config/
 # ---------------------------------------------------------------------------
 
 
@@ -71,7 +71,7 @@ def config_view(request):
 
 
 # ---------------------------------------------------------------------------
-# GET/POST /cookie-love/api/consent/
+# GET/POST <prefix>/consent/
 # ---------------------------------------------------------------------------
 
 
@@ -216,7 +216,7 @@ def _save_consent(request):
 
 
 # ---------------------------------------------------------------------------
-# POST /cookie-love/api/consent/revoke/
+# POST <prefix>/consent/revoke/
 # ---------------------------------------------------------------------------
 
 

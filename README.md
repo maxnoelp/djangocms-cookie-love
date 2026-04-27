@@ -31,19 +31,19 @@ A GDPR-compliant cookie consent management plugin for Django CMS with granular c
 ```
 ┌─────────────────────────────────────────────────────┐
 │  Browser                                            │
-│  ┌──────────┐  ┌──────────────┐  ┌──────────────┐  │
-│  │  Banner   │  │ Settings     │  │ cookie-love  │  │
-│  │  (HTML)   │→ │ Modal (HTML) │→ │ .js          │  │
-│  └──────────┘  └──────────────┘  └──────┬───────┘  │
-│                                         │ XHR      │
+│  ┌──────────┐  ┌──────────────┐  ┌──────────────┐   │
+│  │  Banner  │  │ Settings     │  │ cookie-love  │   │
+│  │  (HTML)  │→ │ Modal (HTML) │→ │ .js          │   │
+│  └──────────┘  └──────────────┘  └──────┬───────┘   │
+│                                         │ XHR       │
 ├─────────────────────────────────────────┼───────────┤
 │  Server                                 ▼           │
 │  ┌──────────────────────────────────────────────┐   │
-│  │  API Views                                   │   │
-│  │  GET  /cookie-love/api/config/               │   │
-│  │  GET  /cookie-love/api/consent/              │   │
-│  │  POST /cookie-love/api/consent/              │   │
-│  │  POST /cookie-love/api/consent/revoke/       │   │
+│  │  API Views (mounted under your chosen prefix)│   │
+│  │  GET  <prefix>/config/                       │   │
+│  │  GET  <prefix>/consent/                      │   │
+│  │  POST <prefix>/consent/                      │   │
+│  │  POST <prefix>/consent/revoke/               │   │
 │  └──────────────────┬───────────────────────────┘   │
 │                     ▼                               │
 │  ┌──────────────────────────────────────────────┐   │
@@ -88,6 +88,24 @@ INSTALLED_APPS = [
 ]
 ```
 
+The core package is pure Django — it works in any Django project via the
+template tags described below. If you also want the **drag & drop django CMS
+plugin** (the *Cookie Consent Banner* you can drop into any placeholder), add
+the optional contrib app as well:
+
+```python
+INSTALLED_APPS = [
+    ...
+    "djangocms_cookie_love",
+    "djangocms_cookie_love.contrib.cms",   # optional – adds the django CMS plugin
+    ...
+]
+```
+
+Skip this entry if you don't use django CMS or only want the template-tag
+integration; everything else (banner, settings modal, API, middleware, admin)
+keeps working without it.
+
 Add the middleware (after `SessionMiddleware`):
 
 ```python
@@ -114,12 +132,13 @@ TEMPLATES = [
 ]
 ```
 
-Include the URLs:
+Include the URLs under any prefix you like (the package's own URLconf no longer
+adds an `api/` segment, so pick whatever fits your project):
 
 ```python
 urlpatterns = [
     ...
-    path("cookie-love/", include("djangocms_cookie_love.urls")),
+    path("api/", include("djangocms_cookie_love.urls")),
     ...
 ]
 ```
@@ -149,9 +168,12 @@ This creates default cookie groups (Essential, Analytics, Marketing, Preferences
 </html>
 ```
 
-### Option 2: Django CMS Plugin
+### Option 2: Django CMS Plugin (optional contrib app)
 
-Add the **Cookie Consent Banner** plugin to any CMS placeholder. The banner renders automatically with all configuration from the admin.
+Make sure `"djangocms_cookie_love.contrib.cms"` is in `INSTALLED_APPS` (see
+[Installation](#installation)), then add the **Cookie Consent Banner** plugin
+to any CMS placeholder. The banner renders automatically with all
+configuration from the admin.
 
 > **Note:** Use either the template tag _or_ the plugin, not both – otherwise the banner appears twice.
 
