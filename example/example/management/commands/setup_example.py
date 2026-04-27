@@ -3,7 +3,7 @@ from django.contrib.sites.models import Site
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
-from djangocms_cookie_love.models import Cookie, CookieConsentConfig, CookieGroup, ConsentVersion
+from djangocms_cookie_love.models import ConsentVersion, Cookie, CookieConsentConfig, CookieGroup
 
 
 class Command(BaseCommand):
@@ -55,11 +55,40 @@ class Command(BaseCommand):
                 is_default_enabled=True,
                 order=0,
             )
-            Cookie.objects.bulk_create([
-                Cookie(group=essential, name="sessionid", slug="sessionid", provider="Diese Website", duration="Sitzung", purpose="Session-Verwaltung", is_required=True, order=0),
-                Cookie(group=essential, name="csrftoken", slug="csrftoken", provider="Diese Website", duration="1 Jahr", purpose="CSRF-Schutz", is_required=True, order=1),
-                Cookie(group=essential, name="cookie_love_consent", slug="cookie-love-consent", provider="Diese Website", duration="1 Jahr", purpose="Speichert Ihre Cookie-Einwilligung", is_required=True, order=2),
-            ])
+            Cookie.objects.bulk_create(
+                [
+                    Cookie(
+                        group=essential,
+                        name="sessionid",
+                        slug="sessionid",
+                        provider="Diese Website",
+                        duration="Sitzung",
+                        purpose="Session-Verwaltung",
+                        is_required=True,
+                        order=0,
+                    ),
+                    Cookie(
+                        group=essential,
+                        name="csrftoken",
+                        slug="csrftoken",
+                        provider="Diese Website",
+                        duration="1 Jahr",
+                        purpose="CSRF-Schutz",
+                        is_required=True,
+                        order=1,
+                    ),
+                    Cookie(
+                        group=essential,
+                        name="cookie_love_consent",
+                        slug="cookie-love-consent",
+                        provider="Diese Website",
+                        duration="1 Jahr",
+                        purpose="Speichert Ihre Cookie-Einwilligung",
+                        is_required=True,
+                        order=2,
+                    ),
+                ]
+            )
 
             analytics = CookieGroup.objects.create(
                 config=config,
@@ -70,11 +99,37 @@ class Command(BaseCommand):
                 is_default_enabled=False,
                 order=1,
             )
-            Cookie.objects.bulk_create([
-                Cookie(group=analytics, name="_ga", slug="ga", provider="Google Analytics", duration="2 Jahre", purpose="Unterscheidung von Nutzern", order=0),
-                Cookie(group=analytics, name="_gid", slug="gid", provider="Google Analytics", duration="24 Stunden", purpose="Unterscheidung von Nutzern", order=1),
-                Cookie(group=analytics, name="_gat", slug="gat", provider="Google Analytics", duration="1 Minute", purpose="Anfragendrosselung", order=2),
-            ])
+            Cookie.objects.bulk_create(
+                [
+                    Cookie(
+                        group=analytics,
+                        name="_ga",
+                        slug="ga",
+                        provider="Google Analytics",
+                        duration="2 Jahre",
+                        purpose="Unterscheidung von Nutzern",
+                        order=0,
+                    ),
+                    Cookie(
+                        group=analytics,
+                        name="_gid",
+                        slug="gid",
+                        provider="Google Analytics",
+                        duration="24 Stunden",
+                        purpose="Unterscheidung von Nutzern",
+                        order=1,
+                    ),
+                    Cookie(
+                        group=analytics,
+                        name="_gat",
+                        slug="gat",
+                        provider="Google Analytics",
+                        duration="1 Minute",
+                        purpose="Anfragendrosselung",
+                        order=2,
+                    ),
+                ]
+            )
 
             marketing = CookieGroup.objects.create(
                 config=config,
@@ -85,10 +140,28 @@ class Command(BaseCommand):
                 is_default_enabled=False,
                 order=2,
             )
-            Cookie.objects.bulk_create([
-                Cookie(group=marketing, name="_fbp", slug="fbp", provider="Facebook", duration="3 Monate", purpose="Werbeanzeigen-Tracking", order=0),
-                Cookie(group=marketing, name="fr", slug="fr", provider="Facebook", duration="3 Monate", purpose="Werbeanzeigen-Auslieferung", order=1),
-            ])
+            Cookie.objects.bulk_create(
+                [
+                    Cookie(
+                        group=marketing,
+                        name="_fbp",
+                        slug="fbp",
+                        provider="Facebook",
+                        duration="3 Monate",
+                        purpose="Werbeanzeigen-Tracking",
+                        order=0,
+                    ),
+                    Cookie(
+                        group=marketing,
+                        name="fr",
+                        slug="fr",
+                        provider="Facebook",
+                        duration="3 Monate",
+                        purpose="Werbeanzeigen-Auslieferung",
+                        order=1,
+                    ),
+                ]
+            )
 
             preferences = CookieGroup.objects.create(
                 config=config,
@@ -99,9 +172,19 @@ class Command(BaseCommand):
                 is_default_enabled=False,
                 order=3,
             )
-            Cookie.objects.bulk_create([
-                Cookie(group=preferences, name="django_language", slug="django-language", provider="Diese Website", duration="1 Jahr", purpose="Bevorzugte Sprache", order=0),
-            ])
+            Cookie.objects.bulk_create(
+                [
+                    Cookie(
+                        group=preferences,
+                        name="django_language",
+                        slug="django-language",
+                        provider="Diese Website",
+                        duration="1 Jahr",
+                        purpose="Bevorzugte Sprache",
+                        order=0,
+                    ),
+                ]
+            )
 
             ConsentVersion.objects.create(
                 config=config,
