@@ -13,9 +13,9 @@ class CookieConsentConfigForm(forms.ModelForm):
         fields = [
             "title",
             "description",
-            "privacy_policy_page",
+            "privacy_policy_path",
             "privacy_policy_url",
-            "imprint_page",
+            "imprint_path",
             "imprint_url",
             "position",
             "accept_all_label",
@@ -27,7 +27,9 @@ class CookieConsentConfigForm(forms.ModelForm):
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-control"}),
             "description": forms.Textarea(attrs={"class": "form-control", "rows": 4}),
+            "privacy_policy_path": forms.TextInput(attrs={"class": "form-control"}),
             "privacy_policy_url": forms.URLInput(attrs={"class": "form-control"}),
+            "imprint_path": forms.TextInput(attrs={"class": "form-control"}),
             "imprint_url": forms.URLInput(attrs={"class": "form-control"}),
             "position": forms.Select(attrs={"class": "form-select"}),
             "accept_all_label": forms.TextInput(attrs={"class": "form-control"}),

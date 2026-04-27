@@ -114,14 +114,15 @@ def analytics_cookies(analytics_group):
 
 @pytest.fixture
 def version(config, essential_group, analytics_group):
-    """Published consent version with snapshot."""
-    return ConsentVersion.objects.create(
-        config=config,
-        version="1.0",
-        change_description="Initial version",
-        requires_reconsent=False,
-        snapshot=config.create_snapshot(),
-    )
+    """Published consent version with snapshot.
+
+    ``CookieConsentConfig.save()`` auto-creates a 1.0 version on first save,
+    so we fetch it here and refresh the snapshot now that the groups exist.
+    """
+    v = ConsentVersion.objects.get(config=config, version="1.0")
+    v.snapshot = config.create_snapshot()
+    v.save(update_fields=["snapshot"])
+    return v
 
 
 @pytest.fixture

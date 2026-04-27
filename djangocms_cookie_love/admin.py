@@ -4,9 +4,10 @@ import csv
 
 from django.contrib import admin
 from django.http import HttpResponse
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-from .models import ConsentVersion, Cookie, CookieConsentConfig, CookieGroup, UserConsent
+from .models import ConsentVersion, Cookie, CookieConsentConfig, CookieGroup, DiscoveredCookie, UserConsent
 
 # ---------------------------------------------------------------------------
 # Inline
@@ -71,9 +72,9 @@ class CookieConsentConfigAdmin(admin.ModelAdmin):
             _("Links"),
             {
                 "fields": [
-                    "privacy_policy_page",
+                    "privacy_policy_path",
                     "privacy_policy_url",
-                    "imprint_page",
+                    "imprint_path",
                     "imprint_url",
                 ],
             },
@@ -235,3 +236,161 @@ class UserConsentAdmin(admin.ModelAdmin):
                 ]
             )
         return response
+
+
+# ---------------------------------------------------------------------------
+# DiscoveredCookie  (read-mostly, populated by middleware / crawler)
+# ---------------------------------------------------------------------------
+
+
+class ResolvedStatusFilter(admin.SimpleListFilter):
+    """Three-way filter that defaults to showing only unresolved cookies."""
+
+    title = _("status")
+    parameter_name = "status"
+
+    def lookups(self, request, model_admin):
+        return [
+            ("unresolved", _("Unresolved")),
+            ("resolved", _("Resolved")),
+            ("all", _("All")),
+        ]
+
+    def queryset(self, request, queryset):
+        value = self.value() or "unresolved"
+        if value == "resolved":
+            return queryset.filter(is_resolved=True)
+        if value == "all":
+            return queryset
+        return queryset.filter(is_resolved=False)
+
+    def choices(self, changelist):
+        # Skip the default "All" entry; we render our own three options and
+        # mark "Unresolved" as selected when no query param is present.
+        value = self.value() or "unresolved"
+        for lookup, title in self.lookup_choices:
+            yield {
+                "selected": value == lookup,
+                "query_string": changelist.get_query_string(
+                    {self.parameter_name: lookup}
+                ),
+                "display": title,
+            }
+
+
+@admin.register(DiscoveredCookie)
+class DiscoveredCookieAdmin(admin.ModelAdmin):
+    """Admin for cookies observed at runtime but not yet documented."""
+
+    list_display = [
+        "name",
+        "domain",
+        "source",
+        "occurrence_count",
+        "first_seen",
+        "last_seen",
+        "is_resolved",
+    ]
+    list_filter = [ResolvedStatusFilter, "source", "domain"]
+    search_fields = ["name", "domain", "sample_path", "notes"]
+    readonly_fields = [
+        "name",
+        "domain",
+        "source",
+        "first_seen",
+        "last_seen",
+        "occurrence_count",
+        "sample_path",
+        "sample_user_agent",
+        "seen_in",
+    ]
+    fields = [
+        "name",
+        "domain",
+        "source",
+        "occurrence_count",
+        "first_seen",
+        "last_seen",
+        "sample_path",
+        "sample_user_agent",
+        "seen_in",
+        "is_resolved",
+        "notes",
+    ]
+    actions = ["mark_resolved", "mark_unresolved"]
+
+    def has_add_permission(self, request):
+        return False  # Only populated by middleware / crawler
+
+    @admin.action(description=_("Mark selected as resolved"))
+    def mark_resolved(self, request, queryset):
+        queryset.update(is_resolved=True)
+
+    @admin.action(description=_("Mark selected as unresolved"))
+    def mark_unresolved(self, request, queryset):
+        queryset.update(is_resolved=False)
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        for group in CookieGroup.objects.select_related("config").order_by(
+            "config_id", "order", "name"
+        ):
+            action_name = f"assign_to_group_{group.pk}"
+            actions[action_name] = (
+                _make_assign_to_group_action(group),
+                action_name,
+                _('Assign to cookie group: "%s"') % group.name,
+            )
+        return actions
+
+
+def _unique_cookie_slug(group, name):
+    """Generate a slug that is unique within the given CookieGroup."""
+    base = slugify(name) or "cookie"
+    base = base[:100]
+    slug = base
+    suffix = 2
+    while Cookie.objects.filter(group=group, slug=slug).exists():
+        tail = f"-{suffix}"
+        slug = f"{base[: 100 - len(tail)]}{tail}"
+        suffix += 1
+    return slug
+
+
+def _make_assign_to_group_action(group):
+    """Build an admin action that assigns selected DiscoveredCookies to ``group``."""
+
+    def assign_action(modeladmin, request, queryset):
+        created = 0
+        reused = 0
+        for discovered in queryset:
+            cookie, was_created = Cookie.objects.get_or_create(
+                group=group,
+                name=discovered.name,
+                defaults={
+                    "slug": _unique_cookie_slug(group, discovered.name),
+                    "provider": discovered.domain or "",
+                    "is_required": group.is_required,
+                },
+            )
+            if was_created:
+                created += 1
+            else:
+                reused += 1
+        resolved = queryset.update(is_resolved=True)
+        modeladmin.message_user(
+            request,
+            _(
+                'Assigned %(resolved)d cookie(s) to "%(group)s" '
+                "(%(created)d created, %(reused)d already existed)."
+            )
+            % {
+                "resolved": resolved,
+                "group": group.name,
+                "created": created,
+                "reused": reused,
+            },
+        )
+
+    assign_action.short_description = _('Assign to cookie group: "%s"') % group.name
+    return assign_action

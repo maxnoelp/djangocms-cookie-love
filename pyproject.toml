@@ -15,34 +15,45 @@ authors = [
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Framework :: Django",
-    "Framework :: Django :: 4.2",
-    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.2",
     "Framework :: Django :: 6.0",
     "Framework :: Django CMS",
     "Framework :: Django CMS :: 4.0",
+    "Framework :: Django CMS :: 4.1",
+    "Framework :: Django CMS :: 5.0",
+    "Framework :: Django CMS :: 5.1",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Internet :: WWW/HTTP",
     "Natural Language :: English",
     "Natural Language :: German",
 ]
 dependencies = [
     "django>=4.2",
-    "django-cms>=4.0",
-    "django-treebeard>=4.7,<5.1",  # treebeard ≥5.1 breaks django-cms migrations (NumConv API change)
 ]
 
 [project.optional-dependencies]
+cms = [
+    "django-cms>=4.0",
+    "django-treebeard>=4.7,<5.1",  # treebeard ≥5.1 breaks django-cms migrations (NumConv API change)
+]
+playwright = [
+    "playwright>=1.40",
+]
 dev = [
     "pytest",
     "pytest-django",
     "pytest-cov",
     "ruff",
     "pre-commit",
+    "django-cms>=4.0",
+    "django-treebeard>=4.7,<5.1",
 ]
 
 [project.urls]

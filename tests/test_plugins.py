@@ -10,7 +10,7 @@ class TestCookieConsentPlugin:
         assert "CookieConsentPlugin" in plugin_names
 
     def test_plugin_attributes(self, db):
-        from djangocms_cookie_love.cms_plugins import CookieConsentPlugin
+        from djangocms_cookie_love.contrib.cms.cms_plugins import CookieConsentPlugin
 
         assert CookieConsentPlugin.cache is False
         assert CookieConsentPlugin.allow_children is False

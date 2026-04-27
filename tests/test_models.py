@@ -49,6 +49,9 @@ class TestCookieConsentConfig:
         assert snapshot["cookie_groups"][0]["slug"] == "essential"
 
     def test_get_current_version_none(self, config):
+        # CookieConsentConfig.save() auto-creates a 1.0 version; remove it
+        # to exercise the no-versions code path.
+        config.versions.all().delete()
         assert config.get_current_version() is None
 
     def test_get_current_version(self, config, version):

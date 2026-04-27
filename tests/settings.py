@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "menus",
     "treebeard",
     "djangocms_cookie_love",
+    "djangocms_cookie_love.contrib.cms.apps.CookieLoveCmsConfig",
 ]
 
 MIDDLEWARE = [

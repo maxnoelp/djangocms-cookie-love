@@ -1,6 +1,8 @@
 # djangocms-cookie-love
 
-A GDPR-compliant cookie consent management plugin for Django CMS with granular control, versioning, and a modern Bootstrap 5 design.
+A GDPR-compliant cookie consent management package for Django (and optionally
+Django CMS) with granular control, versioning, and a modern Bootstrap 5
+design. Works in any Django project; the Django CMS plugin is opt-in.
 
 ![Version](https://img.shields.io/badge/version-0.1.0-blue)
 ![Python](https://img.shields.io/badge/python-≥3.10-blue)
@@ -70,20 +72,42 @@ A GDPR-compliant cookie consent management plugin for Django CMS with granular c
 
 - Python ≥ 3.10
 - Django ≥ 4.2
-- django-cms ≥ 4.0
+- *(optional)* django-cms ≥ 4.0 — only needed for the drag-and-drop plugin
 
 ## Installation
+
+### Plain Django
 
 ```bash
 pip install djangocms-cookie-love
 ```
 
-Add to your `INSTALLED_APPS`:
+```python
+INSTALLED_APPS = [
+    ...
+    "djangocms_cookie_love",
+    ...
+]
+```
+
+Use the template tags shown in [Quick Start](#quick-start) — the cookie banner,
+admin, models, middleware, API and template tags are all pure Django and have
+no runtime dependency on django CMS.
+
+### With Django CMS
+
+Install the optional `cms` extra and enable the contrib app to register the
+**Cookie Consent Banner** plugin:
+
+```bash
+pip install "djangocms-cookie-love[cms]"
+```
 
 ```python
 INSTALLED_APPS = [
     ...
     "djangocms_cookie_love",
+    "djangocms_cookie_love.contrib.cms",  # CMS plugin
     ...
 ]
 ```
@@ -151,7 +175,12 @@ This creates default cookie groups (Essential, Analytics, Marketing, Preferences
 
 ### Option 2: Django CMS Plugin
 
-Add the **Cookie Consent Banner** plugin to any CMS placeholder. The banner renders automatically with all configuration from the admin.
+Requires the optional `cms` extra and the
+`djangocms_cookie_love.contrib.cms.apps.CookieLoveCmsConfig` app to be
+installed (see [With Django CMS](#with-django-cms)).
+
+Add the **Cookie Consent Banner** plugin to any CMS placeholder. The banner
+renders automatically with all configuration from the admin.
 
 > **Note:** Use either the template tag _or_ the plugin, not both – otherwise the banner appears twice.
 
@@ -326,6 +355,7 @@ Django's template loader will pick up your versions automatically — no setting
 2. **Cookie Groups** – Add/edit cookie categories with inline cookie management
 3. **Consent Versions** – Publish new versions to trigger re-consent. Create a new version with `requires_reconsent=True` whenever you make a significant policy change — all users will be shown the banner again.
 4. **User Consents** – Read-only audit log with CSV export
+5. **Discovered Cookies** – Cookies observed at runtime that aren't in the catalog yet (see [Cookie discovery](#cookie-discovery))
 
 ## Middleware
 
@@ -347,6 +377,101 @@ Use in templates:
 <!-- Server-side conditional rendering -->
 {% endif %}
 ```
+
+## Cookie discovery
+
+Two complementary mechanisms surface cookies that aren't yet documented in the
+catalog so editors can review and either add or dismiss them. Both write to the
+`DiscoveredCookie` model — only cookie *names* and *domains* are stored, never
+values.
+
+### 1. Server-side middleware (optional)
+
+`CookieDiscoveryMiddleware` inspects every outgoing response and records any
+`Set-Cookie` whose name isn't in the catalog. Catches cookies set by Django,
+including `HttpOnly` ones; misses cookies set by client-side JS or third
+parties.
+
+```python
+MIDDLEWARE = [
+    ...
+    "djangocms_cookie_love.middleware.CookieConsentMiddleware",
+    "djangocms_cookie_love.middleware.CookieDiscoveryMiddleware",  # optional
+]
+```
+
+Adds one cached lookup and at most one DB write per response that sets an
+unknown cookie. Recommended in staging; sample or disable in production.
+
+### 2. Playwright crawler (optional contrib app)
+
+For third-party and JS-set cookies you need a real browser. Install the optional
+extra:
+
+```bash
+pip install "djangocms-cookie-love[playwright]"
+playwright install chromium
+```
+
+Add the contrib app:
+
+```python
+INSTALLED_APPS = [
+    ...
+    "djangocms_cookie_love.contrib.playwright",   # adds the crawler command
+]
+```
+
+Configure the URLs and (optional) login users:
+
+```python
+COOKIE_LOVE_DISCOVERY_URLS = [
+    "/",
+    "/contact/",
+    "/privacy/",
+    "/imprint/",
+]
+COOKIE_LOVE_DISCOVERY_USERS = [
+    {"label": "regular", "username": "alice", "password": "..."},
+]
+COOKIE_LOVE_DISCOVERY_LOGIN_URL = "/admin/login/"  # default
+```
+
+Run the crawl:
+
+```bash
+python manage.py discover_cookies --base-url=https://staging.example.com
+python manage.py discover_cookies --include-cms-pages    # one page per CMS template
+python manage.py discover_cookies --anon-only            # skip authenticated sweeps
+```
+
+The crawler walks `(anon + each configured user) × (no-consent, rejected,
+accepted) × URLs` in fresh browser contexts and tags each finding with the
+sweep it came from in the `seen_in` field — so a cookie that appears in the
+*no-consent* sweep is a compliance bug, while the same cookie in *accepted* is
+expected.
+
+> Don't crawl as staff/superuser — toolbar and admin assets inject cookies a
+> public visitor never sees.
+
+### 3. Reviewing discoveries in the admin
+
+Findings land in **Discovered Cookies**. The changelist defaults to filtering
+by *Unresolved* — switch the **Status** filter to *Resolved* or *All* to widen
+the view. For each `CookieGroup` a dynamic admin action is registered, named
+**Assign to cookie group: "&lt;Group name&gt;"**:
+
+1. Tick the rows you want to triage.
+2. Pick the matching action from the **Action** dropdown (one entry per cookie
+   group) and click **Go**.
+3. The action creates a `Cookie` in that group (skipped if a cookie with the
+   same name already exists), copies the discovered `domain` into `provider`,
+   inherits `is_required` from the group, and marks the discovered rows as
+   **resolved** so they drop out of the default queue.
+
+For everything else there are still the plain **Mark selected as
+resolved/unresolved** actions to dismiss noise (e.g. one-off third-party
+cookies you don't want to document).
 
 ## Development
 
@@ -419,9 +544,7 @@ python manage.py purge_old_consents --days=730
 
 ## Further Reading
 
-- [**TESTING.md**](TESTING.md) – Test coverage report (116 tests, 93% coverage)
-- [**idea/**](idea/) – Planned features and ideas
-  - [Plain Django support](idea/plain-django-support.md) – Making Django CMS optional
+- [**TESTING.md**](TESTING.md) – Test coverage report
 - [**CHANGELOG.md**](CHANGELOG.md) – Version history
 
 ## License
