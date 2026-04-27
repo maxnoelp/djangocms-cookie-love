@@ -3,8 +3,10 @@
 import uuid
 
 from cms.models.fields import PageField
+from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
@@ -468,3 +470,145 @@ class UserConsent(models.Model):
             return cls.objects.select_related("version", "version__config").get(consent_id=consent_id_str)
         except (cls.DoesNotExist, ValueError, ValidationError):
             return None
+
+
+CONFIGURED_COOKIE_NAMES_CACHE_KEY = "cookie_love:configured_cookie_names"
+CONFIGURED_COOKIE_NAMES_CACHE_TTL = 60  # seconds
+
+
+def get_configured_cookie_names():
+    """
+    Return the union of all cookie names known to the catalog:
+    Cookie rows + names listed in the legacy CookieGroup.cookies JSON field.
+    Cached briefly so the discovery middleware doesn't hit the DB every request.
+    """
+    cached = cache.get(CONFIGURED_COOKIE_NAMES_CACHE_KEY)
+    if cached is not None:
+        return cached
+    names = set(Cookie.objects.values_list("name", flat=True))
+    for legacy in CookieGroup.objects.values_list("cookies", flat=True):
+        if isinstance(legacy, list):
+            names.update(c.get("name", "") for c in legacy if isinstance(c, dict) and c.get("name"))
+    cache.set(CONFIGURED_COOKIE_NAMES_CACHE_KEY, names, CONFIGURED_COOKIE_NAMES_CACHE_TTL)
+    return names
+
+
+class DiscoveredCookie(models.Model):
+    """
+    A cookie observed at runtime that is not (yet) documented in the catalog.
+
+    Populated by:
+    - ``CookieDiscoveryMiddleware`` (server-side ``Set-Cookie`` headers)
+    - The ``discover_cookies`` Playwright crawler (third-party / JS-set cookies)
+
+    Only the cookie *name* and *domain* are stored — never the value.
+    """
+
+    SOURCE_CHOICES = [
+        ("server", _("Server response")),
+        ("crawler", _("Crawler")),
+    ]
+
+    name = models.CharField(
+        max_length=200,
+        verbose_name=_("Cookie Name"),
+    )
+    domain = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name=_("Domain"),
+        help_text=_("Empty for first-party cookies on the host domain"),
+    )
+    source = models.CharField(
+        max_length=20,
+        choices=SOURCE_CHOICES,
+        verbose_name=_("Source"),
+    )
+    first_seen = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("First Seen"),
+    )
+    last_seen = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("Last Seen"),
+    )
+    occurrence_count = models.PositiveIntegerField(
+        default=1,
+        verbose_name=_("Occurrence Count"),
+    )
+    sample_path = models.CharField(
+        max_length=500,
+        blank=True,
+        verbose_name=_("Sample Path"),
+    )
+    sample_user_agent = models.CharField(
+        max_length=500,
+        blank=True,
+        verbose_name=_("Sample User Agent"),
+    )
+    seen_in = models.JSONField(
+        default=dict,
+        blank=True,
+        verbose_name=_("Seen In"),
+        help_text=_("Crawler context tags: role, consent state, locale"),
+    )
+    is_resolved = models.BooleanField(
+        default=False,
+        verbose_name=_("Resolved"),
+        help_text=_("Tick once the cookie has been documented or dismissed"),
+    )
+    notes = models.TextField(
+        blank=True,
+        verbose_name=_("Notes"),
+    )
+
+    class Meta:
+        verbose_name = _("Discovered Cookie")
+        verbose_name_plural = _("Discovered Cookies")
+        ordering = ["-last_seen"]
+        unique_together = [("name", "domain", "source")]
+
+    def __str__(self):
+        return f"{self.name}@{self.domain or '(self)'} [{self.source}]"
+
+    @classmethod
+    def record(cls, name, *, source, domain="", path="", user_agent="", context=None):
+        """
+        Upsert a discovery row. Idempotent — bumps ``occurrence_count`` and
+        ``last_seen`` on every observation. ``context`` is merged into ``seen_in``.
+        """
+        if not name:
+            return None
+        obj, created = cls.objects.get_or_create(
+            name=name[:200],
+            domain=(domain or "")[:200],
+            source=source,
+            defaults={
+                "sample_path": (path or "")[:500],
+                "sample_user_agent": (user_agent or "")[:500],
+                "seen_in": _build_seen_in(context),
+            },
+        )
+        if not created:
+            seen_in = obj.seen_in or {}
+            if context:
+                key = _seen_in_key(context)
+                seen_in[key] = seen_in.get(key, 0) + 1
+            cls.objects.filter(pk=obj.pk).update(
+                occurrence_count=models.F("occurrence_count") + 1,
+                last_seen=timezone.now(),
+                sample_path=(path or obj.sample_path)[:500],
+                sample_user_agent=(user_agent or obj.sample_user_agent)[:500],
+                seen_in=seen_in,
+            )
+        return obj
+
+
+def _seen_in_key(context):
+    return "|".join(f"{k}={v}" for k, v in sorted(context.items()))
+
+
+def _build_seen_in(context):
+    if not context:
+        return {}
+    return {_seen_in_key(context): 1}

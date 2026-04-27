@@ -37,6 +37,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+playwright = [
+    "playwright>=1.40",
+]
 dev = [
     "pytest",
     "pytest-django",

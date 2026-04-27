@@ -58,12 +58,16 @@ class TestConsentVersionAdmin:
     """Test version admin auto-snapshot."""
 
     def test_save_model_creates_snapshot(self, site, rf, config, superuser):
-        """Saving a new version auto-generates a snapshot."""
+        """Saving a new version auto-generates a snapshot.
+
+        Note: ``config`` already has a 1.0 auto-created by ``CookieConsentConfig.save()``,
+        so this test creates a *second* version to exercise the admin's snapshot path.
+        """
         admin = ConsentVersionAdmin(ConsentVersion, site)
         version = ConsentVersion(
             config=config,
-            version="1.0",
-            change_description="Initial",
+            version="2.0",
+            change_description="Policy update",
         )
         request = rf.post("/admin/")
         request.user = superuser

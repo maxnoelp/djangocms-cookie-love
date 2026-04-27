@@ -6,7 +6,7 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.utils.translation import gettext_lazy as _
 
-from .models import ConsentVersion, Cookie, CookieConsentConfig, CookieGroup, UserConsent
+from .models import ConsentVersion, Cookie, CookieConsentConfig, CookieGroup, DiscoveredCookie, UserConsent
 
 # ---------------------------------------------------------------------------
 # Inline
@@ -235,3 +235,61 @@ class UserConsentAdmin(admin.ModelAdmin):
                 ]
             )
         return response
+
+
+# ---------------------------------------------------------------------------
+# DiscoveredCookie  (read-mostly, populated by middleware / crawler)
+# ---------------------------------------------------------------------------
+
+
+@admin.register(DiscoveredCookie)
+class DiscoveredCookieAdmin(admin.ModelAdmin):
+    """Admin for cookies observed at runtime but not yet documented."""
+
+    list_display = [
+        "name",
+        "domain",
+        "source",
+        "occurrence_count",
+        "first_seen",
+        "last_seen",
+        "is_resolved",
+    ]
+    list_filter = ["source", "is_resolved", "domain"]
+    search_fields = ["name", "domain", "sample_path", "notes"]
+    readonly_fields = [
+        "name",
+        "domain",
+        "source",
+        "first_seen",
+        "last_seen",
+        "occurrence_count",
+        "sample_path",
+        "sample_user_agent",
+        "seen_in",
+    ]
+    fields = [
+        "name",
+        "domain",
+        "source",
+        "occurrence_count",
+        "first_seen",
+        "last_seen",
+        "sample_path",
+        "sample_user_agent",
+        "seen_in",
+        "is_resolved",
+        "notes",
+    ]
+    actions = ["mark_resolved", "mark_unresolved"]
+
+    def has_add_permission(self, request):
+        return False  # Only populated by middleware / crawler
+
+    @admin.action(description=_("Mark selected as resolved"))
+    def mark_resolved(self, request, queryset):
+        queryset.update(is_resolved=True)
+
+    @admin.action(description=_("Mark selected as unresolved"))
+    def mark_unresolved(self, request, queryset):
+        queryset.update(is_resolved=False)

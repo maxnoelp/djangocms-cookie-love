@@ -326,6 +326,7 @@ Django's template loader will pick up your versions automatically — no setting
 2. **Cookie Groups** – Add/edit cookie categories with inline cookie management
 3. **Consent Versions** – Publish new versions to trigger re-consent. Create a new version with `requires_reconsent=True` whenever you make a significant policy change — all users will be shown the banner again.
 4. **User Consents** – Read-only audit log with CSV export
+5. **Discovered Cookies** – Cookies observed at runtime that aren't in the catalog yet (see [Cookie discovery](#cookie-discovery))
 
 ## Middleware
 
@@ -347,6 +348,82 @@ Use in templates:
 <!-- Server-side conditional rendering -->
 {% endif %}
 ```
+
+## Cookie discovery
+
+Two complementary mechanisms surface cookies that aren't yet documented in the
+catalog so editors can review and either add or dismiss them. Both write to the
+`DiscoveredCookie` model — only cookie *names* and *domains* are stored, never
+values.
+
+### 1. Server-side middleware (optional)
+
+`CookieDiscoveryMiddleware` inspects every outgoing response and records any
+`Set-Cookie` whose name isn't in the catalog. Catches cookies set by Django,
+including `HttpOnly` ones; misses cookies set by client-side JS or third
+parties.
+
+```python
+MIDDLEWARE = [
+    ...
+    "djangocms_cookie_love.middleware.CookieConsentMiddleware",
+    "djangocms_cookie_love.middleware.CookieDiscoveryMiddleware",  # optional
+]
+```
+
+Adds one cached lookup and at most one DB write per response that sets an
+unknown cookie. Recommended in staging; sample or disable in production.
+
+### 2. Playwright crawler (optional contrib app)
+
+For third-party and JS-set cookies you need a real browser. Install the optional
+extra:
+
+```bash
+pip install "djangocms-cookie-love[playwright]"
+playwright install chromium
+```
+
+Add the contrib app:
+
+```python
+INSTALLED_APPS = [
+    ...
+    "djangocms_cookie_love.contrib.playwright",   # adds the crawler command
+]
+```
+
+Configure the URLs and (optional) login users:
+
+```python
+COOKIE_LOVE_DISCOVERY_URLS = [
+    "/",
+    "/contact/",
+    "/privacy/",
+    "/imprint/",
+]
+COOKIE_LOVE_DISCOVERY_USERS = [
+    {"label": "regular", "username": "alice", "password": "..."},
+]
+COOKIE_LOVE_DISCOVERY_LOGIN_URL = "/admin/login/"  # default
+```
+
+Run the crawl:
+
+```bash
+python manage.py discover_cookies --base-url=https://staging.example.com
+python manage.py discover_cookies --include-cms-pages    # one page per CMS template
+python manage.py discover_cookies --anon-only            # skip authenticated sweeps
+```
+
+The crawler walks `(anon + each configured user) × (no-consent, rejected,
+accepted) × URLs` in fresh browser contexts and tags each finding with the
+sweep it came from in the `seen_in` field — so a cookie that appears in the
+*no-consent* sweep is a compliance bug, while the same cookie in *accepted* is
+expected.
+
+> Don't crawl as staff/superuser — toolbar and admin assets inject cookies a
+> public visitor never sees.
 
 ## Development
 
