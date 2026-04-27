@@ -1,5 +1,6 @@
 """Crawl the site with Playwright and record observed cookies."""
 
+import os
 from urllib.parse import urlparse
 
 from django.conf import settings
@@ -66,6 +67,11 @@ class Command(BaseCommand):
                 "    pip install 'djangocms-cookie-love[playwright]'\n"
                 "    playwright install chromium"
             ) from exc
+
+        # Playwright's sync API runs an asyncio loop in the main thread (via greenlets),
+        # which makes Django's @async_unsafe ORM guard misfire. We're not actually in an
+        # async context, so opt out of the check for the duration of this command.
+        os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 
         base_url = options["base_url"].rstrip("/")
         urls = self._resolve_urls(options)
