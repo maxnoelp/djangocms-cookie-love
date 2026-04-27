@@ -36,11 +36,13 @@ classifiers = [
 ]
 dependencies = [
     "django>=4.2",
-    "django-cms>=4.0",
-    "django-treebeard>=4.7,<5.1",  # treebeard ≥5.1 breaks django-cms migrations (NumConv API change)
 ]
 
 [project.optional-dependencies]
+cms = [
+    "django-cms>=4.0",
+    "django-treebeard>=4.7,<5.1",  # treebeard ≥5.1 breaks django-cms migrations (NumConv API change)
+]
 playwright = [
     "playwright>=1.40",
 ]
@@ -50,6 +52,8 @@ dev = [
     "pytest-cov",
     "ruff",
     "pre-commit",
+    "django-cms>=4.0",
+    "django-treebeard>=4.7,<5.1",
 ]
 
 [project.urls]

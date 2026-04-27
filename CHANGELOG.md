@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   group (creates a `Cookie` and marks the row resolved).
 - `DiscoveredCookie` admin defaults to filtering by *Unresolved*; pick *Resolved*
   or *All* explicitly.
+- Plain Django support: `django-cms` is now an optional dependency. Install
+  `djangocms-cookie-love[cms]` and add
+  `djangocms_cookie_love.contrib.cms.apps.CookieLoveCmsConfig` to
+  `INSTALLED_APPS` to enable the **Cookie Consent Banner** plugin. Without the
+  extra, the package is fully functional via the existing template tags, admin,
+  middleware and API.
 
 ### Changed
 

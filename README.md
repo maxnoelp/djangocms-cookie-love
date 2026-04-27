@@ -1,6 +1,8 @@
 # djangocms-cookie-love
 
-A GDPR-compliant cookie consent management plugin for Django CMS with granular control, versioning, and a modern Bootstrap 5 design.
+A GDPR-compliant cookie consent management package for Django (and optionally
+Django CMS) with granular control, versioning, and a modern Bootstrap 5
+design. Works in any Django project; the Django CMS plugin is opt-in.
 
 ![Version](https://img.shields.io/badge/version-0.1.0-blue)
 ![Python](https://img.shields.io/badge/python-≥3.10-blue)
@@ -70,20 +72,42 @@ A GDPR-compliant cookie consent management plugin for Django CMS with granular c
 
 - Python ≥ 3.10
 - Django ≥ 4.2
-- django-cms ≥ 4.0
+- *(optional)* django-cms ≥ 4.0 — only needed for the drag-and-drop plugin
 
 ## Installation
+
+### Plain Django
 
 ```bash
 pip install djangocms-cookie-love
 ```
 
-Add to your `INSTALLED_APPS`:
+```python
+INSTALLED_APPS = [
+    ...
+    "djangocms_cookie_love",
+    ...
+]
+```
+
+Use the template tags shown in [Quick Start](#quick-start) — the cookie banner,
+admin, models, middleware, API and template tags are all pure Django and have
+no runtime dependency on django CMS.
+
+### With Django CMS
+
+Install the optional `cms` extra and enable the contrib app to register the
+**Cookie Consent Banner** plugin:
+
+```bash
+pip install "djangocms-cookie-love[cms]"
+```
 
 ```python
 INSTALLED_APPS = [
     ...
     "djangocms_cookie_love",
+    "djangocms_cookie_love.contrib.cms",  # CMS plugin
     ...
 ]
 ```
@@ -151,7 +175,12 @@ This creates default cookie groups (Essential, Analytics, Marketing, Preferences
 
 ### Option 2: Django CMS Plugin
 
-Add the **Cookie Consent Banner** plugin to any CMS placeholder. The banner renders automatically with all configuration from the admin.
+Requires the optional `cms` extra and the
+`djangocms_cookie_love.contrib.cms.apps.CookieLoveCmsConfig` app to be
+installed (see [With Django CMS](#with-django-cms)).
+
+Add the **Cookie Consent Banner** plugin to any CMS placeholder. The banner
+renders automatically with all configuration from the admin.
 
 > **Note:** Use either the template tag _or_ the plugin, not both – otherwise the banner appears twice.
 
@@ -515,9 +544,7 @@ python manage.py purge_old_consents --days=730
 
 ## Further Reading
 
-- [**TESTING.md**](TESTING.md) – Test coverage report (116 tests, 93% coverage)
-- [**idea/**](idea/) – Planned features and ideas
-  - [Plain Django support](idea/plain-django-support.md) – Making Django CMS optional
+- [**TESTING.md**](TESTING.md) – Test coverage report
 - [**CHANGELOG.md**](CHANGELOG.md) – Version history
 
 ## License
