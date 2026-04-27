@@ -4,7 +4,7 @@ import uuid
 
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -581,17 +581,22 @@ class DiscoveredCookie(models.Model):
             },
         )
         if not created:
-            seen_in = obj.seen_in or {}
-            if context:
-                key = _seen_in_key(context)
-                seen_in[key] = seen_in.get(key, 0) + 1
-            cls.objects.filter(pk=obj.pk).update(
-                occurrence_count=models.F("occurrence_count") + 1,
-                last_seen=timezone.now(),
-                sample_path=(path or obj.sample_path)[:500],
-                sample_user_agent=(user_agent or obj.sample_user_agent)[:500],
-                seen_in=seen_in,
-            )
+            # seen_in is a JSON dict that we read-modify-write, so concurrent
+            # observations of the same cookie would race and drop increments.
+            # Lock the row for the duration of the merge.
+            with transaction.atomic():
+                locked = cls.objects.select_for_update().get(pk=obj.pk)
+                seen_in = locked.seen_in or {}
+                if context:
+                    key = _seen_in_key(context)
+                    seen_in[key] = seen_in.get(key, 0) + 1
+                cls.objects.filter(pk=obj.pk).update(
+                    occurrence_count=models.F("occurrence_count") + 1,
+                    last_seen=timezone.now(),
+                    sample_path=(path or locked.sample_path)[:500],
+                    sample_user_agent=(user_agent or locked.sample_user_agent)[:500],
+                    seen_in=seen_in,
+                )
         return obj
 
 
